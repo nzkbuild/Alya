@@ -49,8 +49,17 @@
           <nav class="nav-links" aria-label="Primary">
             <a href="#letter">Letter</a>
             <a href="#moments">Moments</a>
+            <a href="#gallery">Gallery</a>
             <a href="#promises">Promises</a>
           </nav>
+          <div class="header-tools" aria-label="Display tools">
+            <button class="tool-btn" id="toggleVisualMode" type="button">
+              Smooth Visual
+            </button>
+            <button class="tool-btn" id="togglePrivacy" type="button">
+              Hide for Privacy
+            </button>
+          </div>
         </div>
       </header>
 
@@ -65,12 +74,22 @@
             <p class="lead">
               I made this space for you my one and only.
             </p>
+            <p class="message-line" id="dailyMessage">
+              You are my favorite part of every day.
+            </p>
+            <p class="day-counter">
+              Together for <span id="dayCounter">0 days</span>
+            </p>
             <div class="hero-actions">
               <a class="btn btn-gold" href="#letter">Open the Letter</a>
               <button class="btn btn-ghost" id="playSong" type="button">
                 Play Our Song
               </button>
+              <button class="btn btn-ghost" id="replaySong" type="button">
+                Replay Song
+              </button>
             </div>
+            <p class="song-status" id="songStatus">Song status: paused</p>
           </div>
 
           <aside class="signature-card reveal" aria-label="Signature card">
@@ -123,6 +142,42 @@
           </div>
         </section>
 
+        <section id="gallery" class="container reveal">
+          <div class="section-head">
+            <p class="kicker">Private Gallery</p>
+            <h3>Frames we keep forever</h3>
+          </div>
+          <div class="gallery-grid">
+            <figure class="gallery-card">
+              <img
+                src="assets/images/photo-1.jpg"
+                alt="A special memory together"
+                loading="lazy"
+                data-photo-slot="1"
+              />
+              <figcaption>Our favorite moment</figcaption>
+            </figure>
+            <figure class="gallery-card">
+              <img
+                src="assets/images/photo-2.jpg"
+                alt="Another beautiful memory"
+                loading="lazy"
+                data-photo-slot="2"
+              />
+              <figcaption>Late-night smiles</figcaption>
+            </figure>
+            <figure class="gallery-card">
+              <img
+                src="assets/images/photo-3.jpg"
+                alt="A future memory in the making"
+                loading="lazy"
+                data-photo-slot="3"
+              />
+              <figcaption>More to come</figcaption>
+            </figure>
+          </div>
+        </section>
+
         <section id="promises" class="container reveal">
           <div class="section-head">
             <p class="kicker">Bespoke Promises</p>
@@ -142,7 +197,12 @@
             Made only for
             <span data-bind="herName">Alya Batrisyia</span>.
           </p>
-          <p class="tiny">Private and exclusive</p>
+          <div class="footer-actions">
+            <button class="footer-link" id="replayIntro" type="button">
+              Replay Intro
+            </button>
+            <p class="tiny">Private and exclusive</p>
+          </div>
         </div>
       </footer>
     </div>
