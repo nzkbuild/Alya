@@ -16,108 +16,140 @@
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="intro-locked">
     <div class="bg-grain" aria-hidden="true"></div>
 
-    <header class="site-header reveal">
-      <div class="container header-inner">
-        <div class="brand">Alya x Nabil</div>
-        <nav class="nav-links" aria-label="Primary">
-          <a href="#letter">Letter</a>
-          <a href="#moments">Moments</a>
-          <a href="#promises">Promises</a>
-        </nav>
+    <section id="introGate" class="intro-gate" aria-label="Intro question">
+      <div class="intro-panel">
+        <p class="kicker">Private Entry</p>
+        <h1 class="intro-title">
+          Will you be my lover forever and ever?
+        </h1>
+        <p class="intro-lead">
+          This website opens only for one person:
+          <span data-bind="herName">Alya Batrisyia</span>.
+        </p>
+        <div class="intro-actions">
+          <button class="btn btn-gold intro-yes" id="yesBtn" type="button">
+            Yes, forever
+          </button>
+          <button class="btn btn-ghost intro-no" id="noBtn" type="button">
+            No
+          </button>
+        </div>
+        <p class="intro-hint">Pick carefully. There is a correct answer.</p>
       </div>
-    </header>
+      <div class="heart-burst" id="heartBurst" aria-hidden="true"></div>
+    </section>
 
-    <main>
-      <section class="hero container">
-        <div class="hero-copy reveal">
-          <p class="kicker">Private Collection No. 01</p>
-          <h1>
-            For <span data-bind="herName">Alya</span>,<br />
-            where elegance meets soft little chaos.
-          </h1>
-          <p class="lead">
-            I made this space for you my one and only.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-gold" href="#letter">Open the Letter</a>
-            <button class="btn btn-ghost" id="playSong" type="button">
-              Play Our Song
-            </button>
+    <div id="siteShell" class="site-shell">
+      <header class="site-header reveal">
+        <div class="container header-inner">
+          <div class="brand">Alya x Nabil</div>
+          <nav class="nav-links" aria-label="Primary">
+            <a href="#letter">Letter</a>
+            <a href="#moments">Moments</a>
+            <a href="#promises">Promises</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero container">
+          <div class="hero-copy reveal">
+            <p class="kicker">Private Collection No. 01</p>
+            <h1>
+              For <span data-bind="herName">Alya Batrisyia</span>,<br />
+              where elegance meets soft little chaos.
+            </h1>
+            <p class="lead">
+              I made this space for you my one and only.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-gold" href="#letter">Open the Letter</a>
+              <button class="btn btn-ghost" id="playSong" type="button">
+                Play Our Song
+              </button>
+            </div>
           </div>
-        </div>
 
-        <aside class="signature-card reveal" aria-label="Signature card">
-          <span class="seal" aria-hidden="true"></span>
-          <p class="card-label">Reserved for</p>
-          <h2 data-bind="herName">Alya</h2>
-          <p class="card-sub">Only one edition exists.</p>
-        </aside>
-      </section>
+          <aside class="signature-card reveal" aria-label="Signature card">
+            <span class="seal" aria-hidden="true"></span>
+            <p class="card-label">Reserved for</p>
+            <h2 data-bind="herName">Alya Batrisyia</h2>
+            <p class="card-sub">Only one edition exists.</p>
+          </aside>
+        </section>
 
-      <section id="letter" class="container reveal">
-        <article class="letter">
-          <p class="letter-date">
-            Since <span data-bind="anniversary">12-12-2021</span>
-          </p>
+        <section id="letter" class="container reveal">
+          <article class="letter">
+            <p class="letter-date">
+              Since <span data-bind="anniversary">12-12-2021</span>
+            </p>
+            <p>
+              My favorite luxury has never been a thing. It has always been your
+              laugh, your eyes, and how every place becomes better when you are
+              there.
+            </p>
+            <p>
+              Thank you for being the softest part of my days and the brightest
+              part of my plans.
+            </p>
+            <p class="signature">
+              Love,<br />
+              <span data-bind="yourName">Nabil Zikri</span>
+            </p>
+          </article>
+        </section>
+
+        <section id="moments" class="container reveal">
+          <div class="section-head">
+            <p class="kicker">Curated Moments</p>
+            <h3>Our little collection</h3>
+          </div>
+          <div class="moments-grid">
+            <article class="moment-card">
+              <p class="moment-title">First Smile</p>
+              <p>The moment that made me want to know everything about you.</p>
+            </article>
+            <article class="moment-card">
+              <p class="moment-title">Favorite Date</p>
+              <p>A table for two, late night talks, and no concept of time.</p>
+            </article>
+            <article class="moment-card">
+              <p class="moment-title">Future Plan</p>
+              <p>More trips, more sunsets, and more reasons to dress up.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="promises" class="container reveal">
+          <div class="section-head">
+            <p class="kicker">Bespoke Promises</p>
+            <h3>Guaranteed forever benefits</h3>
+          </div>
+          <div class="promise-list">
+            <p><span>01</span> We gonna be better version of us, everyday.</p>
+            <p><span>02</span> Keep planning pretty dates, even on random days.</p>
+            <p><span>03</span> Protect your peace and hype your dreams.</p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer reveal">
+        <div class="container footer-inner">
           <p>
-            My favorite luxury has never been a thing. It has always been your
-            laugh, your eyes, and how every place becomes better when you are
-            there.
+            Made only for
+            <span data-bind="herName">Alya Batrisyia</span>.
           </p>
-          <p>
-            Thank you for being the softest part of my days and the brightest
-            part of my plans.
-          </p>
-          <p class="signature">
-            Love,<br />
-            <span data-bind="yourName">Nabil</span>
-          </p>
-        </article>
-      </section>
+          <p class="tiny">Private and exclusive</p>
+        </div>
+      </footer>
+    </div>
 
-      <section id="moments" class="container reveal">
-        <div class="section-head">
-          <p class="kicker">Curated Moments</p>
-          <h3>Our little collection</h3>
-        </div>
-        <div class="moments-grid">
-          <article class="moment-card">
-            <p class="moment-title">First Smile</p>
-            <p>The moment that made me want to know everything about you.</p>
-          </article>
-          <article class="moment-card">
-            <p class="moment-title">Favorite Date</p>
-            <p>A table for two, late night talks, and no concept of time.</p>
-          </article>
-          <article class="moment-card">
-            <p class="moment-title">Future Plan</p>
-            <p>More trips, more sunsets, and more reasons to dress up.</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="promises" class="container reveal">
-        <div class="section-head">
-          <p class="kicker">Bespoke Promises</p>
-          <h3>Guaranteed forever benefits</h3>
-        </div>
-        <div class="promise-list">
-          <p><span>01</span> We gonna be better version of us, everyday.</p>
-          <p><span>02</span> Keep planning pretty dates, even on random days.</p>
-          <p><span>03</span> Protect your peace and hype your dreams.</p>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer reveal">
-      <div class="container footer-inner">
-        <p>Made only for <span data-bind="herName">Alya</span>.</p>
-        <p class="tiny">Private and exclusive</p>
-      </div>
-    </footer>
+    <audio id="ourSong" preload="metadata">
+      <source src="assets/music/our-song.m4a" type="audio/mp4" />
+    </audio>
 
     <script src="script.js"></script>
   </body>
