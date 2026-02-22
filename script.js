@@ -1,8 +1,8 @@
 const profile = {
-  herName: "Your Girlfriend",
-  yourName: "Your Name",
-  anniversary: "2024-06-12",
-  songUrl: ""
+  herName: "Alya Batrisyia",
+  yourName: "Nabil Zikri",
+  anniversary: "12-12-2021",
+  songUrl: "https://m.soundcloud.com/alya-batrisyia-248196262/2021a2?ref=sms&p=i&c=1&si=9FFF39989F0C49D0A895177DE3D4CD26&utm_source=sms&utm_medium=message&utm_campaign=social_sharing"
 };
 
 function bindProfileFields() {
