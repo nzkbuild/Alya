@@ -107,6 +107,43 @@ function setupTimelineDates() {
   });
 }
 
+function setupTimelineEntrance() {
+  const timeline = document.querySelector(".moments-timeline");
+  if (!timeline) return;
+
+  const items = Array.from(timeline.querySelectorAll(".timeline-item"));
+  items.forEach((item, index) => {
+    item.style.setProperty("--timeline-stagger", String(index));
+  });
+
+  const reveal = () => {
+    timeline.classList.add("is-revealed");
+  };
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    reveal();
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        reveal();
+        observer.disconnect();
+      });
+    },
+    {
+      root: null,
+      threshold: 0.35,
+      rootMargin: "0px 0px -12% 0px"
+    }
+  );
+
+  observer.observe(timeline);
+}
+
 function placeholderPhoto(slot) {
   const svg = `
 <svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>
@@ -572,6 +609,7 @@ function setupIntroGate(songControls) {
 bindProfileFields();
 setupDailyDetails();
 setupTimelineDates();
+setupTimelineEntrance();
 setupPhotoFallbacks();
 setupGalleryLightbox();
 setupSectionNavHighlight();
