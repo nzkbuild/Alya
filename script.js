@@ -332,6 +332,13 @@ function setupSectionNavHighlight() {
   let lastScrollY = window.scrollY;
 
   const pickActiveByScroll = () => {
+    const doc = document.documentElement;
+    const nearBottom = window.scrollY + window.innerHeight >= doc.scrollHeight - 8;
+    if (nearBottom) {
+      setActive(sections[sections.length - 1].id);
+      return;
+    }
+
     const marker = Math.max(110, Math.min(window.innerHeight * 0.34, 260));
     const hysteresis = 24;
     const sectionTops = sections.map((section) => section.getBoundingClientRect().top);
