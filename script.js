@@ -333,9 +333,21 @@ function setupSectionNavHighlight() {
 
   const pickActiveByScroll = () => {
     const doc = document.documentElement;
-    const nearBottom = window.scrollY + window.innerHeight >= doc.scrollHeight - 8;
+    const lastSection = sections[sections.length - 1];
+    const lastTop = lastSection.getBoundingClientRect().top;
+    const lastActivationLine =
+      window.innerHeight - Math.max(96, Math.round(window.innerHeight * 0.24));
+
+    if (lastTop <= lastActivationLine) {
+      setActive(lastSection.id);
+      return;
+    }
+
+    const docHeight = Math.max(document.body.scrollHeight, doc.scrollHeight);
+    const nearBottomThreshold = Math.max(24, Math.round(window.innerHeight * 0.08));
+    const nearBottom = window.scrollY + window.innerHeight >= docHeight - nearBottomThreshold;
     if (nearBottom) {
-      setActive(sections[sections.length - 1].id);
+      setActive(lastSection.id);
       return;
     }
 
