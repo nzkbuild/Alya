@@ -77,11 +77,13 @@
               <button class="btn btn-ghost" id="playSong" type="button">
                 Play Our Song
               </button>
-              <button class="btn btn-ghost" id="replaySong" type="button">
-                Replay Song
+            </div>
+            <div class="song-meta">
+              <p class="song-status" id="songStatus">Song status: paused</p>
+              <button class="song-link" id="replaySong" type="button">
+                Replay from start
               </button>
             </div>
-            <p class="song-status" id="songStatus">Song status: paused</p>
           </div>
 
           <aside class="signature-card reveal" aria-label="Signature card">
@@ -98,12 +100,13 @@
               Since <span data-bind="anniversary">12-12-2021</span>
             </p>
             <p>
-              The best thing in my life was never a place or a thing.
-              It was always your laugh, your patience, and the way every room
-              feels calmer when you walk in.
+              Some people search for grand moments to prove love.
+              I found mine in your laugh, your patience, and the peace that
+              follows you into every room.
             </p>
             <p>
-              Thank you for being my safe place and my favorite adventure at the same time.
+              If life gets loud, I still want us to choose each other in the quiet:
+              small talks, long drives, and all the ordinary nights that become priceless.
             </p>
             <p class="signature">
               Love,<br />
@@ -115,28 +118,28 @@
         <section id="moments" class="container reveal">
           <div class="section-head">
             <p class="kicker">Curated Moments</p>
-            <h3>Little scenes, big meaning</h3>
+            <h3>Milestones on record</h3>
           </div>
           <div class="moments-timeline" aria-label="Our relationship timeline">
             <article class="timeline-item">
               <p class="timeline-date" data-timeline-offset-days="0">Chapter 01</p>
               <h4 class="timeline-title">First Smile</h4>
-              <p class="timeline-copy">The exact second I knew this story would matter.</p>
+              <p class="timeline-copy">One glance, one shy smile, and the whole room felt different.</p>
             </article>
             <article class="timeline-item">
               <p class="timeline-date" data-timeline-offset-days="180">Chapter 02</p>
               <h4 class="timeline-title">The Long Conversation</h4>
-              <p class="timeline-copy">One table, two coffees, and suddenly midnight felt too early.</p>
+              <p class="timeline-copy">One table, two coffees, three hours, and zero urge to leave.</p>
             </article>
             <article class="timeline-item">
               <p class="timeline-date" data-timeline-offset-days="365">Chapter 03</p>
               <h4 class="timeline-title">Comfort Became Home</h4>
-              <p class="timeline-copy">You turned ordinary days into something warm, calm, and certain.</p>
+              <p class="timeline-copy">No big event, just daily life becoming steady, warm, and ours.</p>
             </article>
             <article class="timeline-item">
               <p class="timeline-date" data-timeline-date="today">Chapter 04</p>
               <h4 class="timeline-title">The Ongoing Plan</h4>
-              <p class="timeline-copy">More cities, more sunsets, and a lifetime of tiny celebrations.</p>
+              <p class="timeline-copy">Next chapter: more cities, more sunsets, same two names.</p>
             </article>
           </div>
         </section>
@@ -180,12 +183,12 @@
         <section id="promises" class="container reveal">
           <div class="section-head">
             <p class="kicker">Bespoke Promises</p>
-            <h3>Terms of forever</h3>
+            <h3>Non-negotiables</h3>
           </div>
           <div class="promise-list">
-            <p><span>01</span> Keep growing together, one ordinary day at a time.</p>
-            <p><span>02</span> Keep making room for dates, even on random Tuesdays.</p>
-            <p><span>03</span> Protect your peace and champion your dreams, always.</p>
+            <p><span>01</span> Choose kindness first, even on hard days.</p>
+            <p><span>02</span> Keep making time for us, especially when life gets busy.</p>
+            <p><span>03</span> Speak honestly, protect the peace, celebrate every win.</p>
           </div>
         </section>
       </main>
@@ -204,6 +207,13 @@
           </div>
         </div>
       </footer>
+
+      <nav class="mobile-nav" aria-label="Mobile sections">
+        <a href="#letter">Letter</a>
+        <a href="#moments">Moments</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#promises">Promises</a>
+      </nav>
     </div>
 
     <audio id="ourSong" preload="metadata">

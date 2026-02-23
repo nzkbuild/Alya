@@ -200,6 +200,13 @@ body.intro-unlocked .intro-gate {
   margin: 0 auto;
 }
 
+#letter,
+#moments,
+#gallery,
+#promises {
+  scroll-margin-top: calc(78px + var(--safe-top));
+}
+
 .site-header {
   position: sticky;
   top: 0;
@@ -307,10 +314,35 @@ h1 {
   gap: 0.75rem;
 }
 
+.song-meta {
+  margin-top: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
 .song-status {
-  margin: 0.8rem 0 0;
+  margin: 0;
   color: rgba(245, 239, 231, 0.82);
   font-size: 0.86rem;
+}
+
+.song-link {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--rose);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(232, 180, 187, 0.55);
+}
+
+.song-link:hover,
+.song-link:focus-visible {
+  color: #f0d0d5;
 }
 
 .btn {
@@ -645,6 +677,10 @@ h3 {
   font-size: 0.72rem;
 }
 
+.mobile-nav {
+  display: none;
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(14px);
@@ -743,6 +779,10 @@ body.intro-unlocked .site-shell .reveal {
     display: none;
   }
 
+  .site-footer {
+    padding-bottom: calc(5.4rem + var(--safe-bottom));
+  }
+
   .intro-panel {
     text-align: left;
   }
@@ -762,6 +802,44 @@ body.intro-unlocked .site-shell .reveal {
   .footer-actions {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .mobile-nav {
+    position: fixed;
+    left: calc(0.7rem + var(--safe-left));
+    right: calc(0.7rem + var(--safe-right));
+    bottom: calc(0.6rem + var(--safe-bottom));
+    z-index: 70;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+    padding: 0.45rem;
+    border-radius: 14px;
+    border: 1px solid rgba(245, 239, 231, 0.2);
+    background: rgba(16, 12, 12, 0.86);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 14px 26px rgba(0, 0, 0, 0.34);
+  }
+
+  .mobile-nav a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 38px;
+    border-radius: 10px;
+    border: 1px solid rgba(245, 239, 231, 0.16);
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .mobile-nav a:hover,
+  .mobile-nav a:focus-visible {
+    color: var(--text);
+    border-color: rgba(232, 180, 187, 0.62);
   }
 }
 
@@ -786,7 +864,9 @@ body.intro-unlocked .site-shell .reveal {
     transition: none;
   }
 
-  .footer-link {
+  .footer-link,
+  .song-link,
+  .mobile-nav a {
     transition: none;
   }
 }
