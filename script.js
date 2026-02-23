@@ -329,17 +329,46 @@ function setupSectionNavHighlight() {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const scrollBehavior = prefersReducedMotion ? "auto" : "smooth";
   let ticking = false;
+  let lastScrollY = window.scrollY;
 
   const pickActiveByScroll = () => {
     const marker = Math.max(110, Math.min(window.innerHeight * 0.34, 260));
-    let current = sections[0].id;
+    const hysteresis = 24;
+    const sectionTops = sections.map((section) => section.getBoundingClientRect().top);
+    const scrollingDown = window.scrollY >= lastScrollY;
+    lastScrollY = window.scrollY;
 
-    sections.forEach((section) => {
-      const top = section.getBoundingClientRect().top;
-      if (top <= marker) current = section.id;
+    let candidateIndex = 0;
+    sectionTops.forEach((top, index) => {
+      if (top <= marker) candidateIndex = index;
     });
 
-    setActive(current);
+    if (!activeId) {
+      setActive(sections[candidateIndex].id);
+      return;
+    }
+
+    let activeIndex = sections.findIndex((section) => section.id === activeId);
+    if (activeIndex < 0) activeIndex = 0;
+
+    if (scrollingDown) {
+      while (
+        activeIndex + 1 < sections.length &&
+        sectionTops[activeIndex + 1] <= marker - hysteresis
+      ) {
+        activeIndex += 1;
+      }
+    } else {
+      while (activeIndex > 0 && sectionTops[activeIndex] > marker + hysteresis) {
+        activeIndex -= 1;
+      }
+    }
+
+    if (Math.abs(candidateIndex - activeIndex) > 1) {
+      activeIndex = candidateIndex;
+    }
+
+    setActive(sections[activeIndex].id);
   };
 
   const onScroll = () => {

@@ -277,7 +277,10 @@ body.intro-unlocked .intro-gate {
   text-decoration: none;
   font-size: 0.92rem;
   letter-spacing: 0.04em;
-  transition: color 220ms ease;
+  transition:
+    color 220ms ease,
+    text-decoration-color 220ms ease,
+    text-underline-offset 220ms ease;
 }
 
 .nav-links a:hover,
@@ -1010,6 +1013,11 @@ body.intro-unlocked .site-shell .reveal {
     letter-spacing: 0.04em;
     text-decoration: none;
     background: rgba(255, 255, 255, 0.02);
+    transition:
+      color 180ms ease,
+      border-color 180ms ease,
+      background-color 180ms ease,
+      transform 180ms ease;
   }
 
   .mobile-nav a:hover,
@@ -1022,6 +1030,7 @@ body.intro-unlocked .site-shell .reveal {
     color: #fff7ef;
     border-color: rgba(232, 180, 187, 0.84);
     background: rgba(232, 180, 187, 0.18);
+    transform: translateY(-1px);
   }
 
   .lightbox {
