@@ -17,6 +17,16 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="intro-locked">
+    <script>
+      (() => {
+        try {
+          if (window.localStorage.getItem("alya_intro_accepted_v1") === "yes") {
+            document.body.classList.remove("intro-locked");
+            document.body.classList.add("intro-unlocked");
+          }
+        } catch {}
+      })();
+    </script>
     <a class="skip-link" href="#mainContent">Skip to main content</a>
     <div class="bg-grain" aria-hidden="true"></div>
 
