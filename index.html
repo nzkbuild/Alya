@@ -158,6 +158,11 @@
                 src="assets/images/photo-1.jpg"
                 alt="A special memory together"
                 loading="lazy"
+                decoding="async"
+                fetchpriority="low"
+                width="1200"
+                height="900"
+                sizes="(max-width: 900px) 100vw, 33vw"
                 data-photo-slot="1"
               />
               <figcaption>Our favorite moment</figcaption>
@@ -167,6 +172,11 @@
                 src="assets/images/photo-2.jpg"
                 alt="Another beautiful memory"
                 loading="lazy"
+                decoding="async"
+                fetchpriority="low"
+                width="1200"
+                height="900"
+                sizes="(max-width: 900px) 100vw, 33vw"
                 data-photo-slot="2"
               />
               <figcaption>Late-night smiles</figcaption>
@@ -176,6 +186,11 @@
                 src="assets/images/photo-3.jpg"
                 alt="A future memory in the making"
                 loading="lazy"
+                decoding="async"
+                fetchpriority="low"
+                width="1200"
+                height="900"
+                sizes="(max-width: 900px) 100vw, 33vw"
                 data-photo-slot="3"
               />
               <figcaption>More to come</figcaption>
@@ -198,7 +213,7 @@
             ‹
           </button>
           <figure class="lightbox-figure">
-            <img id="lightboxImage" alt="" />
+            <img id="lightboxImage" alt="" decoding="async" />
             <figcaption id="lightboxCaption"></figcaption>
           </figure>
           <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="Next image">
@@ -242,7 +257,7 @@
       </nav>
     </div>
 
-    <audio id="ourSong" preload="metadata">
+    <audio id="ourSong" preload="none">
       <source src="assets/music/our-song.m4a" type="audio/mp4" />
     </audio>
 
