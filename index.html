@@ -180,6 +180,29 @@
           </div>
         </section>
 
+        <div
+          class="lightbox"
+          id="galleryLightbox"
+          aria-hidden="true"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Gallery image viewer"
+        >
+          <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close image">
+            Close
+          </button>
+          <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="Previous image">
+            ‹
+          </button>
+          <figure class="lightbox-figure">
+            <img id="lightboxImage" alt="" />
+            <figcaption id="lightboxCaption"></figcaption>
+          </figure>
+          <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="Next image">
+            ›
+          </button>
+        </div>
+
         <section id="promises" class="container reveal">
           <div class="section-head">
             <p class="kicker">Bespoke Promises</p>

@@ -132,6 +132,112 @@ function setupPhotoFallbacks() {
   });
 }
 
+function setupGalleryLightbox() {
+  const cards = Array.from(document.querySelectorAll(".gallery-card"));
+  const lightbox = document.getElementById("galleryLightbox");
+  const lightboxImage = document.getElementById("lightboxImage");
+  const lightboxCaption = document.getElementById("lightboxCaption");
+  const closeButton = document.getElementById("lightboxClose");
+  const prevButton = document.getElementById("lightboxPrev");
+  const nextButton = document.getElementById("lightboxNext");
+
+  if (!cards.length || !lightbox || !lightboxImage || !lightboxCaption) return;
+
+  let activeIndex = -1;
+  let lastTrigger = null;
+
+  const galleryItems = cards
+    .map((card) => {
+      const image = card.querySelector("img");
+      const caption = card.querySelector("figcaption");
+      if (!image) return null;
+      return {
+        src: image.currentSrc || image.src,
+        alt: image.alt || "Gallery image",
+        caption: caption ? caption.textContent || "" : "",
+        card
+      };
+    })
+    .filter(Boolean);
+
+  if (!galleryItems.length) return;
+
+  const renderLightbox = () => {
+    const current = galleryItems[activeIndex];
+    if (!current) return;
+    lightboxImage.src = current.src;
+    lightboxImage.alt = current.alt;
+    lightboxCaption.textContent = current.caption;
+  };
+
+  const setLightboxOpen = (isOpen) => {
+    lightbox.classList.toggle("is-open", isOpen);
+    lightbox.setAttribute("aria-hidden", isOpen ? "false" : "true");
+    document.body.classList.toggle("lightbox-open", isOpen);
+  };
+
+  const openLightbox = (index, triggerEl) => {
+    activeIndex = index;
+    lastTrigger = triggerEl || null;
+    renderLightbox();
+    setLightboxOpen(true);
+    if (closeButton) closeButton.focus();
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+    activeIndex = -1;
+    if (lastTrigger && typeof lastTrigger.focus === "function") {
+      lastTrigger.focus();
+    }
+  };
+
+  const move = (direction) => {
+    if (!lightbox.classList.contains("is-open")) return;
+    activeIndex = (activeIndex + direction + galleryItems.length) % galleryItems.length;
+    renderLightbox();
+  };
+
+  galleryItems.forEach((item, index) => {
+    item.card.tabIndex = 0;
+    item.card.setAttribute("role", "button");
+    item.card.setAttribute("aria-label", `Open image ${index + 1} of ${galleryItems.length}`);
+
+    item.card.addEventListener("click", () => openLightbox(index, item.card));
+    item.card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      openLightbox(index, item.card);
+    });
+  });
+
+  if (closeButton) closeButton.addEventListener("click", closeLightbox);
+  if (prevButton) prevButton.addEventListener("click", () => move(-1));
+  if (nextButton) nextButton.addEventListener("click", () => move(1));
+
+  lightbox.addEventListener("click", (event) => {
+    if (event.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!lightbox.classList.contains("is-open")) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeLightbox();
+      return;
+    }
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      move(-1);
+      return;
+    }
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      move(1);
+    }
+  });
+}
+
 function setupSongControls() {
   const playButton = document.getElementById("playSong");
   const replayButton = document.getElementById("replaySong");
@@ -384,5 +490,6 @@ bindProfileFields();
 setupDailyDetails();
 setupTimelineDates();
 setupPhotoFallbacks();
+setupGalleryLightbox();
 const songControls = setupSongControls();
 setupIntroGate(songControls);
