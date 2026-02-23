@@ -237,6 +237,10 @@ body.intro-unlocked .intro-gate {
   scroll-margin-top: calc(78px + var(--safe-top));
 }
 
+#promises {
+  padding-bottom: 1.2rem;
+}
+
 .site-header {
   position: sticky;
   top: 0;

@@ -308,15 +308,6 @@ function setupSectionNavHighlight() {
   );
   if (!navLinks.length) return;
 
-  const linksById = new Map();
-  navLinks.forEach((link) => {
-    const id = link.getAttribute("href")?.replace("#", "");
-    if (!id) return;
-    if (!linksById.has(id)) linksById.set(id, []);
-    linksById.get(id).push(link);
-  });
-
-  const visibleRatios = new Map();
   let activeId = "";
 
   const setActive = (id) => {
@@ -335,51 +326,67 @@ function setupSectionNavHighlight() {
     });
   };
 
-  const pickActiveId = () => {
-    let bestId = "";
-    let bestRatio = -1;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const scrollBehavior = prefersReducedMotion ? "auto" : "smooth";
+  let ticking = false;
+
+  const pickActiveByScroll = () => {
+    const marker = Math.max(110, Math.min(window.innerHeight * 0.34, 260));
+    let current = sections[0].id;
 
     sections.forEach((section) => {
-      const id = section.id;
-      const ratio = visibleRatios.get(id) || 0;
-      if (ratio > bestRatio) {
-        bestRatio = ratio;
-        bestId = id;
-      }
+      const top = section.getBoundingClientRect().top;
+      if (top <= marker) current = section.id;
     });
 
-    if (bestId) setActive(bestId);
+    setActive(current);
   };
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        visibleRatios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
-      });
-      pickActiveId();
-    },
-    {
-      root: null,
-      threshold: [0.2, 0.35, 0.5, 0.7],
-      rootMargin: "-20% 0px -35% 0px"
-    }
-  );
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(() => {
+      pickActiveByScroll();
+      ticking = false;
+    });
+  };
 
-  sections.forEach((section) => observer.observe(section));
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
 
   navLinks.forEach((link) => {
-    link.addEventListener("click", () => {
+    link.addEventListener("click", (event) => {
       const id = link.getAttribute("href")?.replace("#", "");
-      if (id) setActive(id);
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+
+      event.preventDefault();
+      setActive(id);
+      target.scrollIntoView({ behavior: scrollBehavior, block: "start" });
+
+      if (window.history && typeof window.history.replaceState === "function") {
+        const cleanUrl = `${window.location.pathname}${window.location.search}`;
+        window.history.replaceState(null, "", cleanUrl);
+      }
     });
   });
 
-  const initialHash = window.location.hash.replace("#", "");
-  if (initialHash && linksById.has(initialHash)) {
-    setActive(initialHash);
-    return;
+  pickActiveByScroll();
+}
+
+function setupTopOnReload() {
+  if ("scrollRestoration" in window.history) {
+    window.history.scrollRestoration = "manual";
   }
-  setActive(sections[0].id);
+
+  const navigationEntry = performance.getEntriesByType("navigation")[0];
+  const isReload = navigationEntry && navigationEntry.type === "reload";
+  if (!isReload) return;
+
+  window.requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  });
 }
 
 function setupSongControls() {
@@ -631,6 +638,7 @@ function setupIntroGate(songControls) {
 }
 
 bindProfileFields();
+setupTopOnReload();
 setupDailyDetails();
 setupTimelineDates();
 setupTimelineEntrance();
