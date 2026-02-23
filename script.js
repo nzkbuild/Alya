@@ -238,6 +238,89 @@ function setupGalleryLightbox() {
   });
 }
 
+function setupSectionNavHighlight() {
+  const sections = Array.from(document.querySelectorAll("main section[id]"));
+  if (!sections.length) return;
+
+  const navLinks = Array.from(
+    document.querySelectorAll(".nav-links a[href^='#'], .mobile-nav a[href^='#']")
+  );
+  if (!navLinks.length) return;
+
+  const linksById = new Map();
+  navLinks.forEach((link) => {
+    const id = link.getAttribute("href")?.replace("#", "");
+    if (!id) return;
+    if (!linksById.has(id)) linksById.set(id, []);
+    linksById.get(id).push(link);
+  });
+
+  const visibleRatios = new Map();
+  let activeId = "";
+
+  const setActive = (id) => {
+    if (!id || activeId === id) return;
+    activeId = id;
+
+    navLinks.forEach((link) => {
+      const linkId = link.getAttribute("href")?.replace("#", "");
+      const isActive = linkId === id;
+      link.classList.toggle("is-active", isActive);
+      if (isActive) {
+        link.setAttribute("aria-current", "page");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+  };
+
+  const pickActiveId = () => {
+    let bestId = "";
+    let bestRatio = -1;
+
+    sections.forEach((section) => {
+      const id = section.id;
+      const ratio = visibleRatios.get(id) || 0;
+      if (ratio > bestRatio) {
+        bestRatio = ratio;
+        bestId = id;
+      }
+    });
+
+    if (bestId) setActive(bestId);
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        visibleRatios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
+      });
+      pickActiveId();
+    },
+    {
+      root: null,
+      threshold: [0.2, 0.35, 0.5, 0.7],
+      rootMargin: "-20% 0px -35% 0px"
+    }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      const id = link.getAttribute("href")?.replace("#", "");
+      if (id) setActive(id);
+    });
+  });
+
+  const initialHash = window.location.hash.replace("#", "");
+  if (initialHash && linksById.has(initialHash)) {
+    setActive(initialHash);
+    return;
+  }
+  setActive(sections[0].id);
+}
+
 function setupSongControls() {
   const playButton = document.getElementById("playSong");
   const replayButton = document.getElementById("replaySong");
@@ -491,5 +574,6 @@ setupDailyDetails();
 setupTimelineDates();
 setupPhotoFallbacks();
 setupGalleryLightbox();
+setupSectionNavHighlight();
 const songControls = setupSongControls();
 setupIntroGate(songControls);

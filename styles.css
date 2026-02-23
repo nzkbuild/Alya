@@ -255,6 +255,13 @@ body.intro-unlocked .intro-gate {
   color: var(--rose);
 }
 
+.nav-links a.is-active {
+  color: #f4d9dd;
+  text-decoration: underline;
+  text-decoration-color: rgba(232, 180, 187, 0.62);
+  text-underline-offset: 0.26rem;
+}
+
 .hero {
   padding: 5.2rem 0 2.2rem;
   display: grid;
@@ -945,6 +952,12 @@ body.intro-unlocked .site-shell .reveal {
   .mobile-nav a:focus-visible {
     color: var(--text);
     border-color: rgba(232, 180, 187, 0.62);
+  }
+
+  .mobile-nav a.is-active {
+    color: #fff7ef;
+    border-color: rgba(232, 180, 187, 0.84);
+    background: rgba(232, 180, 187, 0.18);
   }
 
   .lightbox {
