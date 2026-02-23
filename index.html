@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="intro-locked">
+    <a class="skip-link" href="#mainContent">Skip to main content</a>
     <div class="bg-grain" aria-hidden="true"></div>
 
     <section id="introGate" class="intro-gate" aria-label="Intro question">
@@ -55,7 +56,7 @@
         </div>
       </header>
 
-      <main>
+      <main id="mainContent" tabindex="-1">
         <section class="hero container">
           <div class="hero-copy reveal">
             <p class="kicker">Private Collection No. 01</p>
@@ -79,7 +80,9 @@
               </button>
             </div>
             <div class="song-meta">
-              <p class="song-status" id="songStatus">Song status: paused</p>
+              <p class="song-status" id="songStatus" role="status" aria-live="polite">
+                Song status: paused
+              </p>
               <button class="song-link" id="replaySong" type="button">
                 Replay from start
               </button>

@@ -52,6 +52,27 @@ body.lightbox-open {
   overflow: hidden;
 }
 
+.skip-link {
+  position: fixed;
+  left: calc(0.8rem + var(--safe-left));
+  top: calc(0.7rem + var(--safe-top));
+  z-index: 180;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 239, 231, 0.32);
+  background: rgba(16, 12, 12, 0.94);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  transform: translateY(-160%);
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 .site-shell {
   position: relative;
   opacity: 0;
@@ -356,6 +377,13 @@ h1 {
   color: #f0d0d5;
 }
 
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid rgba(232, 180, 187, 0.84);
+  outline-offset: 2px;
+}
+
 .btn {
   border: 1px solid transparent;
   border-radius: 999px;
@@ -654,7 +682,7 @@ h3 {
 }
 
 .gallery-card:focus-visible {
-  outline: 2px solid rgba(232, 180, 187, 0.78);
+  outline: 2px solid rgba(232, 180, 187, 0.84);
   outline-offset: 2px;
 }
 

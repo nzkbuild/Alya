@@ -238,6 +238,7 @@ function setupGalleryLightbox() {
   galleryItems.forEach((item, index) => {
     item.card.tabIndex = 0;
     item.card.setAttribute("role", "button");
+    item.card.setAttribute("aria-haspopup", "dialog");
     item.card.setAttribute("aria-label", `Open image ${index + 1} of ${galleryItems.length}`);
 
     item.card.addEventListener("click", () => openLightbox(index, item.card));
@@ -258,6 +259,29 @@ function setupGalleryLightbox() {
 
   document.addEventListener("keydown", (event) => {
     if (!lightbox.classList.contains("is-open")) return;
+    if (event.key === "Tab") {
+      const focusable = Array.from(
+        lightbox.querySelectorAll("button, [href], [tabindex]:not([tabindex='-1'])")
+      ).filter((node) => !node.hasAttribute("disabled"));
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+        return;
+      }
+
+      if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+        return;
+      }
+    }
+
     if (event.key === "Escape") {
       event.preventDefault();
       closeLightbox();
