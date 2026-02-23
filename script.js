@@ -7,16 +7,13 @@ const profile = {
 };
 
 const INTRO_STORAGE_KEY = "alya_intro_accepted_v1";
-const VISUAL_MODE_STORAGE_KEY = "alya_visual_mode_v1";
-const PRIVACY_STORAGE_KEY = "alya_privacy_mode_v1";
 const NO_BUTTON_STATES = ["No", "Are you sure?", "Really?", "Last chance", "Yes"];
-const VISUAL_MODE = { high: "visual-high", smooth: "visual-smooth" };
 const DAILY_MESSAGES = [
   "You are my favorite part of every day.",
-  "Still choosing you, forever.",
-  "I adore you more than yesterday.",
-  "Home is wherever you smile.",
-  "You make ordinary days feel golden."
+  "I still choose you in every version of tomorrow.",
+  "With you, ordinary evenings feel cinematic.",
+  "Home keeps following your smile.",
+  "You make time feel softer and brighter."
 ];
 
 function parseAnniversary(rawValue) {
@@ -80,47 +77,33 @@ function setupDailyDetails() {
   }
 }
 
-function setupVisualMode() {
-  const toggleButton = document.getElementById("toggleVisualMode");
-  const prefersSmoothDefault = navigator.userAgent.includes("Windows");
-  const storedMode = localStorage.getItem(VISUAL_MODE_STORAGE_KEY);
-  let currentMode = storedMode || (prefersSmoothDefault ? VISUAL_MODE.smooth : VISUAL_MODE.high);
+function setupTimelineDates() {
+  const timelineDates = document.querySelectorAll(".timeline-date");
+  if (!timelineDates.length) return;
 
-  const applyMode = (mode) => {
-    currentMode = mode;
-    document.body.classList.remove(VISUAL_MODE.high, VISUAL_MODE.smooth);
-    document.body.classList.add(mode);
-    localStorage.setItem(VISUAL_MODE_STORAGE_KEY, mode);
-    if (toggleButton) {
-      toggleButton.textContent =
-        mode === VISUAL_MODE.smooth ? "Switch to High Visual" : "Switch to Smooth Visual";
-    }
-  };
-
-  applyMode(currentMode);
-
-  if (toggleButton) {
-    toggleButton.addEventListener("click", () => {
-      applyMode(currentMode === VISUAL_MODE.smooth ? VISUAL_MODE.high : VISUAL_MODE.smooth);
+  const anniversaryDate = parseAnniversary(profile.anniversary);
+  const formatDate = (dateValue) =>
+    dateValue.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
     });
-  }
-}
 
-function setupPrivacyToggle() {
-  const togglePrivacyButton = document.getElementById("togglePrivacy");
-  if (!togglePrivacyButton) return;
+  timelineDates.forEach((node) => {
+    const explicitType = node.getAttribute("data-timeline-date");
+    if (explicitType === "today") {
+      node.textContent = formatDate(new Date());
+      return;
+    }
 
-  const stored = localStorage.getItem(PRIVACY_STORAGE_KEY) === "true";
+    if (!anniversaryDate) return;
 
-  const applyPrivacy = (hidden) => {
-    document.body.classList.toggle("privacy-hidden", hidden);
-    localStorage.setItem(PRIVACY_STORAGE_KEY, hidden ? "true" : "false");
-    togglePrivacyButton.textContent = hidden ? "Show Private Page" : "Hide for Privacy";
-  };
-
-  applyPrivacy(stored);
-  togglePrivacyButton.addEventListener("click", () => {
-    applyPrivacy(!document.body.classList.contains("privacy-hidden"));
+    const offsetRaw = node.getAttribute("data-timeline-offset-days");
+    const offsetDays = Number.parseInt(offsetRaw || "0", 10);
+    const offset = Number.isNaN(offsetDays) ? 0 : offsetDays;
+    const milestoneDate = new Date(anniversaryDate);
+    milestoneDate.setDate(milestoneDate.getDate() + offset);
+    node.textContent = formatDate(milestoneDate);
   });
 }
 
@@ -261,6 +244,9 @@ function setupIntroGate(songControls) {
   const noButton = document.getElementById("noBtn");
   const replayIntro = document.getElementById("replayIntro");
   const heartBurst = document.getElementById("heartBurst");
+  const introHint = document.querySelector(".intro-hint");
+  const siteShell = document.getElementById("siteShell");
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (!introGate || !yesButton || !noButton) {
     document.body.classList.remove("intro-locked");
@@ -269,14 +255,42 @@ function setupIntroGate(songControls) {
   }
 
   let noStep = 0;
+  let isUnlocking = false;
   const finalNoIndex = NO_BUTTON_STATES.length - 1;
+  const defaultHintText = introHint ? introHint.textContent : "";
+  const noHintMessages = [
+    "Pick carefully. There is a correct answer.",
+    "Still no? Try reading the room.",
+    "No pressure, but the yes button looks better.",
+    "One more tap and this turns into yes."
+  ];
+
+  const setShellInteractive = (isInteractive) => {
+    if (!siteShell) return;
+    if (isInteractive) {
+      siteShell.removeAttribute("inert");
+      return;
+    }
+    siteShell.setAttribute("inert", "");
+  };
+
+  const setReplayState = (isIntroOpen) => {
+    if (!replayIntro) return;
+    replayIntro.disabled = isIntroOpen;
+    replayIntro.setAttribute("aria-disabled", isIntroOpen ? "true" : "false");
+    replayIntro.textContent = isIntroOpen ? "Intro Active" : "Replay Intro";
+  };
 
   const resetIntroButtons = () => {
     noStep = 0;
+    isUnlocking = false;
     noButton.textContent = NO_BUTTON_STATES[0];
     noButton.classList.remove("is-yes");
     noButton.removeAttribute("aria-label");
+    yesButton.disabled = false;
+    noButton.disabled = false;
     yesButton.style.setProperty("--yes-scale", "1");
+    if (introHint) introHint.textContent = defaultHintText;
   };
 
   const setYesScale = (step) => {
@@ -284,31 +298,71 @@ function setupIntroGate(songControls) {
     yesButton.style.setProperty("--yes-scale", scale.toFixed(2));
   };
 
+  const enterIntroState = () => {
+    resetIntroButtons();
+    introGate.hidden = false;
+    document.body.classList.remove("intro-unlocked");
+    document.body.classList.add("intro-locked");
+    setShellInteractive(false);
+    setReplayState(true);
+  };
+
   const unlockExperience = async () => {
+    if (isUnlocking || document.body.classList.contains("intro-unlocked")) return;
+    isUnlocking = true;
+    yesButton.disabled = true;
+    noButton.disabled = true;
+
     document.body.classList.remove("intro-locked");
     document.body.classList.add("intro-unlocked");
     localStorage.setItem(INTRO_STORAGE_KEY, "yes");
+    setShellInteractive(true);
+    setReplayState(false);
     triggerHeartBurst(heartBurst);
 
+    const hideDelay = prefersReducedMotion ? 0 : 430;
     window.setTimeout(() => {
       introGate.hidden = true;
       const primaryAction = document.getElementById("playSong");
       if (primaryAction) primaryAction.focus();
-    }, 430);
+    }, hideDelay);
 
     await songControls.playLocalSong({ fromStart: false, allowFallback: false });
   };
 
   const showIntroAgain = () => {
+    if (document.body.classList.contains("intro-locked")) return;
+
     localStorage.removeItem(INTRO_STORAGE_KEY);
     songControls.pauseSong();
-    resetIntroButtons();
-    introGate.hidden = false;
-    document.body.classList.remove("intro-unlocked");
-    document.body.classList.add("intro-locked");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    enterIntroState();
+    const behavior = prefersReducedMotion ? "auto" : "smooth";
+    window.scrollTo({ top: 0, behavior });
     yesButton.focus();
   };
+
+  yesButton.addEventListener("click", unlockExperience);
+
+  noButton.addEventListener("click", () => {
+    if (isUnlocking) return;
+    if (noStep >= finalNoIndex) {
+      unlockExperience();
+      return;
+    }
+
+    noStep = Math.min(noStep + 1, finalNoIndex);
+    noButton.textContent = NO_BUTTON_STATES[noStep];
+    setYesScale(noStep);
+    if (introHint) {
+      introHint.textContent =
+        noHintMessages[Math.min(noStep, noHintMessages.length - 1)] || defaultHintText;
+    }
+
+    if (noStep >= finalNoIndex) {
+      noButton.classList.add("is-yes");
+      noButton.setAttribute("aria-label", "Yes, forever");
+    }
+  });
 
   if (replayIntro) {
     replayIntro.addEventListener("click", showIntroAgain);
@@ -318,32 +372,17 @@ function setupIntroGate(songControls) {
     introGate.hidden = true;
     document.body.classList.remove("intro-locked");
     document.body.classList.add("intro-unlocked");
+    setShellInteractive(true);
+    setReplayState(false);
     return;
   }
 
-  yesButton.addEventListener("click", unlockExperience);
-
-  noButton.addEventListener("click", () => {
-    if (noStep >= finalNoIndex) {
-      unlockExperience();
-      return;
-    }
-
-    noStep = Math.min(noStep + 1, finalNoIndex);
-    noButton.textContent = NO_BUTTON_STATES[noStep];
-    setYesScale(noStep);
-
-    if (noStep >= finalNoIndex) {
-      noButton.classList.add("is-yes");
-      noButton.setAttribute("aria-label", "Yes, forever");
-    }
-  });
+  enterIntroState();
 }
 
 bindProfileFields();
 setupDailyDetails();
-setupVisualMode();
-setupPrivacyToggle();
+setupTimelineDates();
 setupPhotoFallbacks();
 const songControls = setupSongControls();
 setupIntroGate(songControls);

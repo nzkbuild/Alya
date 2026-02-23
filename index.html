@@ -6,12 +6,12 @@
     <title>Private Collection | For Her</title>
     <meta
       name="description"
-      content="A luxury-inspired love letter website with a cute, intimate feel."
+      content="A private editorial-style love letter page with curated memories and promises."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600;6..96,700&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -23,10 +23,10 @@
       <div class="intro-panel">
         <p class="kicker">Private Entry</p>
         <h1 class="intro-title">
-          Will you be my lover forever and ever?
+          Will you keep choosing me, today and always?
         </h1>
         <p class="intro-lead">
-          This website opens only for one person:
+          This page opens for one person only:
           <span data-bind="herName">Alya Batrisyia</span>.
         </p>
         <div class="intro-actions">
@@ -37,7 +37,7 @@
             No
           </button>
         </div>
-        <p class="intro-hint">Pick carefully. There is a correct answer.</p>
+        <p class="intro-hint">Lifetime access has one correct answer.</p>
       </div>
       <div class="heart-burst" id="heartBurst" aria-hidden="true"></div>
     </section>
@@ -52,14 +52,6 @@
             <a href="#gallery">Gallery</a>
             <a href="#promises">Promises</a>
           </nav>
-          <div class="header-tools" aria-label="Display tools">
-            <button class="tool-btn" id="toggleVisualMode" type="button">
-              Smooth Visual
-            </button>
-            <button class="tool-btn" id="togglePrivacy" type="button">
-              Hide for Privacy
-            </button>
-          </div>
         </div>
       </header>
 
@@ -69,10 +61,10 @@
             <p class="kicker">Private Collection No. 01</p>
             <h1>
               For <span data-bind="herName">Alya Batrisyia</span>,<br />
-              where elegance meets soft little chaos.
+              with all the quiet luxury of us.
             </h1>
             <p class="lead">
-              I made this space for you my one and only.
+              Not flashy, just honest. A small archive of moments I never want to lose.
             </p>
             <p class="message-line" id="dailyMessage">
               You are my favorite part of every day.
@@ -106,13 +98,12 @@
               Since <span data-bind="anniversary">12-12-2021</span>
             </p>
             <p>
-              My favorite luxury has never been a thing. It has always been your
-              laugh, your eyes, and how every place becomes better when you are
-              there.
+              The best thing in my life was never a place or a thing.
+              It was always your laugh, your patience, and the way every room
+              feels calmer when you walk in.
             </p>
             <p>
-              Thank you for being the softest part of my days and the brightest
-              part of my plans.
+              Thank you for being my safe place and my favorite adventure at the same time.
             </p>
             <p class="signature">
               Love,<br />
@@ -124,20 +115,28 @@
         <section id="moments" class="container reveal">
           <div class="section-head">
             <p class="kicker">Curated Moments</p>
-            <h3>Our little collection</h3>
+            <h3>Little scenes, big meaning</h3>
           </div>
-          <div class="moments-grid">
-            <article class="moment-card">
-              <p class="moment-title">First Smile</p>
-              <p>The moment that made me want to know everything about you.</p>
+          <div class="moments-timeline" aria-label="Our relationship timeline">
+            <article class="timeline-item">
+              <p class="timeline-date" data-timeline-offset-days="0">Chapter 01</p>
+              <h4 class="timeline-title">First Smile</h4>
+              <p class="timeline-copy">The exact second I knew this story would matter.</p>
             </article>
-            <article class="moment-card">
-              <p class="moment-title">Favorite Date</p>
-              <p>A table for two, late night talks, and no concept of time.</p>
+            <article class="timeline-item">
+              <p class="timeline-date" data-timeline-offset-days="180">Chapter 02</p>
+              <h4 class="timeline-title">The Long Conversation</h4>
+              <p class="timeline-copy">One table, two coffees, and suddenly midnight felt too early.</p>
             </article>
-            <article class="moment-card">
-              <p class="moment-title">Future Plan</p>
-              <p>More trips, more sunsets, and more reasons to dress up.</p>
+            <article class="timeline-item">
+              <p class="timeline-date" data-timeline-offset-days="365">Chapter 03</p>
+              <h4 class="timeline-title">Comfort Became Home</h4>
+              <p class="timeline-copy">You turned ordinary days into something warm, calm, and certain.</p>
+            </article>
+            <article class="timeline-item">
+              <p class="timeline-date" data-timeline-date="today">Chapter 04</p>
+              <h4 class="timeline-title">The Ongoing Plan</h4>
+              <p class="timeline-copy">More cities, more sunsets, and a lifetime of tiny celebrations.</p>
             </article>
           </div>
         </section>
@@ -181,12 +180,12 @@
         <section id="promises" class="container reveal">
           <div class="section-head">
             <p class="kicker">Bespoke Promises</p>
-            <h3>Guaranteed forever benefits</h3>
+            <h3>Terms of forever</h3>
           </div>
           <div class="promise-list">
-            <p><span>01</span> We gonna be better version of us, everyday.</p>
-            <p><span>02</span> Keep planning pretty dates, even on random days.</p>
-            <p><span>03</span> Protect your peace and hype your dreams.</p>
+            <p><span>01</span> Keep growing together, one ordinary day at a time.</p>
+            <p><span>02</span> Keep making room for dates, even on random Tuesdays.</p>
+            <p><span>03</span> Protect your peace and champion your dreams, always.</p>
           </div>
         </section>
       </main>
