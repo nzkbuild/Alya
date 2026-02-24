@@ -561,28 +561,6 @@ function setupSongControls() {
       markLocalPlaybackUnavailable();
       setStatus("local audio unavailable, use song link");
     });
-
-    const primeAudio = () => {
-      if (localPlaybackUnavailable) return;
-      audio.muted = true;
-      const unlockAttempt = audio.play();
-      if (!unlockAttempt || typeof unlockAttempt.then !== "function") {
-        audio.muted = false;
-        return;
-      }
-      unlockAttempt
-        .then(() => {
-          audio.pause();
-          audio.currentTime = 0;
-          audio.muted = false;
-        })
-        .catch(() => {
-          audio.muted = false;
-        });
-    };
-
-    document.addEventListener("pointerdown", primeAudio, { once: true, passive: true });
-    document.addEventListener("touchstart", primeAudio, { once: true, passive: true });
   }
 
   if (playButton) {
@@ -722,7 +700,7 @@ function setupIntroGate(songControls) {
       if (primaryAction) primaryAction.focus();
     }, hideDelay);
 
-    await songControls.playLocalSong({ fromStart: false, allowFallback: false });
+    await songControls.playLocalSong({ fromStart: false, allowFallback: true });
   };
 
   const showIntroAgain = () => {
