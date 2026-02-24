@@ -177,6 +177,78 @@ function setupTogetherSpotlight() {
   observer.observe(spotlight);
 }
 
+function setupLetterReveal() {
+  const letterSection = document.getElementById("letter");
+  const letterCard = document.getElementById("letterCard");
+  const letterBody = document.getElementById("letterBody");
+  const openButton = document.getElementById("openLetterBtn");
+  const inlineButton = document.getElementById("letterInlineOpen");
+
+  if (!letterSection || !letterCard || !letterBody) return;
+
+  const triggers = [openButton, inlineButton].filter(Boolean);
+  let isOpen = false;
+
+  const getHeaderOffset = () => {
+    const value = window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue("--header-offset");
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : 84;
+  };
+
+  const scrollToLetter = () => {
+    const offset = getHeaderOffset() + 10;
+    const top = Math.max(
+      0,
+      letterSection.getBoundingClientRect().top +
+        (window.scrollY || window.pageYOffset || 0) -
+        offset
+    );
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
+  };
+
+  const setOpenState = (open) => {
+    isOpen = open;
+    letterCard.classList.toggle("is-open", open);
+    letterCard.setAttribute("data-letter-state", open ? "open" : "sealed");
+    letterBody.setAttribute("aria-hidden", open ? "false" : "true");
+    triggers.forEach((trigger) => {
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  };
+
+  const openLetter = () => {
+    if (!isOpen) {
+      setOpenState(true);
+    }
+    scrollToLetter();
+  };
+
+  if (openButton) {
+    openButton.addEventListener("click", openLetter);
+  }
+
+  if (inlineButton) {
+    inlineButton.addEventListener("click", openLetter);
+  }
+
+  document.querySelectorAll("a[href='#letter']").forEach((anchor) => {
+    anchor.addEventListener("click", () => {
+      if (!isOpen) {
+        setOpenState(true);
+      }
+    });
+  });
+
+  if (window.location.hash === "#letter") {
+    setOpenState(true);
+  }
+}
+
 function setupTimelineDates() {
   const timelineDates = document.querySelectorAll(".timeline-date");
   if (!timelineDates.length) return;
@@ -953,6 +1025,7 @@ setupTopOnReload();
 setupResponsiveOffsets();
 setupScrollProgress();
 setupDailyDetails();
+setupLetterReveal();
 setupTogetherSpotlight();
 setupTimelineDates();
 setupTimelineEntrance();

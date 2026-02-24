@@ -89,7 +89,15 @@
               You are my favorite part of every day.
             </p>
             <div class="hero-actions">
-              <a class="btn btn-gold" href="#letter">Open the Letter</a>
+              <button
+                class="btn btn-gold"
+                id="openLetterBtn"
+                type="button"
+                aria-controls="letterCard"
+                aria-expanded="false"
+              >
+                Open the Letter
+              </button>
               <button class="btn btn-ghost" id="playSong" type="button">
                 Play Our Song
               </button>
@@ -113,23 +121,39 @@
         </section>
 
         <section id="letter" class="container reveal">
-          <article class="letter">
-            <p class="letter-date">
-              Since <span data-bind="anniversary">12-12-2021</span>
+          <article class="letter" id="letterCard" data-letter-state="sealed">
+            <p class="letter-kicker">Private Letter</p>
+            <p class="letter-preview">
+              Written for one person only. Open when you are ready.
             </p>
-            <p>
-              Some people search for grand moments to prove love.
-              I found mine in your laugh, your patience, and the peace that
-              follows you into every room.
-            </p>
-            <p>
-              If life gets loud, I still want us to choose each other in the quiet:
-              small talks, long drives, and all the ordinary nights that become priceless.
-            </p>
-            <p class="signature">
-              Love,<br />
-              <span data-bind="yourName">Nabil Zikri</span>
-            </p>
+            <button
+              class="letter-trigger"
+              id="letterInlineOpen"
+              type="button"
+              aria-controls="letterBody"
+              aria-expanded="false"
+            >
+              Unfold message
+            </button>
+
+            <div class="letter-body" id="letterBody" aria-hidden="true">
+              <p class="letter-date">
+                Since <span data-bind="anniversary">12-12-2021</span>
+              </p>
+              <p>
+                Some people search for grand moments to prove love.
+                I found mine in your laugh, your patience, and the peace that
+                follows you into every room.
+              </p>
+              <p>
+                If life gets loud, I still want us to choose each other in the quiet:
+                small talks, long drives, and all the ordinary nights that become priceless.
+              </p>
+              <p class="signature">
+                Love,<br />
+                <span data-bind="yourName">Nabil Zikri</span>
+              </p>
+            </div>
           </article>
         </section>
 
