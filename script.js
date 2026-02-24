@@ -180,13 +180,15 @@ function setupTogetherSpotlight() {
 function setupLetterReveal() {
   const letterSection = document.getElementById("letter");
   const letterCard = document.getElementById("letterCard");
+  const letterSealPanel = document.getElementById("letterSealPanel");
   const letterBody = document.getElementById("letterBody");
   const openButton = document.getElementById("openLetterBtn");
-  const inlineButton = document.getElementById("letterInlineOpen");
+  const unsealButton = document.getElementById("letterUnsealBtn");
+  const resealButton = document.getElementById("letterResealBtn");
 
-  if (!letterSection || !letterCard || !letterBody) return;
+  if (!letterSection || !letterCard || !letterSealPanel || !letterBody) return;
 
-  const triggers = [openButton, inlineButton].filter(Boolean);
+  const openingTriggers = [openButton, unsealButton].filter(Boolean);
   let isOpen = false;
 
   const getHeaderOffset = () => {
@@ -215,10 +217,27 @@ function setupLetterReveal() {
     isOpen = open;
     letterCard.classList.toggle("is-open", open);
     letterCard.setAttribute("data-letter-state", open ? "open" : "sealed");
+    letterSealPanel.setAttribute("aria-hidden", open ? "true" : "false");
     letterBody.setAttribute("aria-hidden", open ? "false" : "true");
-    triggers.forEach((trigger) => {
+    if (open) {
+      letterSealPanel.setAttribute("inert", "");
+      letterBody.removeAttribute("inert");
+    } else {
+      letterSealPanel.removeAttribute("inert");
+      letterBody.setAttribute("inert", "");
+    }
+    openingTriggers.forEach((trigger) => {
       trigger.setAttribute("aria-expanded", open ? "true" : "false");
     });
+    if (unsealButton) {
+      unsealButton.disabled = open;
+      unsealButton.tabIndex = open ? -1 : 0;
+    }
+    if (resealButton) {
+      resealButton.setAttribute("aria-expanded", open ? "true" : "false");
+      resealButton.disabled = !open;
+      resealButton.tabIndex = open ? 0 : -1;
+    }
   };
 
   const openLetter = () => {
@@ -235,8 +254,18 @@ function setupLetterReveal() {
     openButton.addEventListener("click", openLetter);
   }
 
-  if (inlineButton) {
-    inlineButton.addEventListener("click", openLetter);
+  if (unsealButton) {
+    unsealButton.addEventListener("click", openLetter);
+  }
+
+  if (resealButton) {
+    resealButton.addEventListener("click", () => {
+      if (!isOpen) return;
+      setOpenState(false);
+      if (unsealButton) {
+        unsealButton.focus();
+      }
+    });
   }
 
   document.querySelectorAll("a[href='#letter']").forEach((anchor) => {

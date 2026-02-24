@@ -122,21 +122,35 @@
 
         <section id="letter" class="container reveal">
           <article class="letter" id="letterCard" data-letter-state="sealed">
-            <p class="letter-kicker">Private Letter</p>
-            <p class="letter-preview">
-              Written for one person only. Open when you are ready.
-            </p>
-            <button
-              class="letter-trigger"
-              id="letterInlineOpen"
-              type="button"
-              aria-controls="letterBody"
-              aria-expanded="false"
-            >
-              Unfold message
-            </button>
+            <div class="letter-seal-panel" id="letterSealPanel" aria-hidden="false">
+              <p class="letter-kicker">Private Letter</p>
+              <p class="letter-preview">
+                Written for one person only. Open when you are ready.
+              </p>
+              <button
+                class="letter-seal-button"
+                id="letterUnsealBtn"
+                type="button"
+                aria-controls="letterBody"
+                aria-expanded="false"
+              >
+                <span class="letter-seal-core" aria-hidden="true">✦</span>
+                <span class="letter-seal-text">Unseal Letter</span>
+              </button>
+            </div>
 
             <div class="letter-body" id="letterBody" aria-hidden="true">
+              <div class="letter-body-head">
+                <button
+                  class="letter-reseal"
+                  id="letterResealBtn"
+                  type="button"
+                  aria-controls="letterBody"
+                  aria-expanded="true"
+                >
+                  Seal Again
+                </button>
+              </div>
               <p class="letter-date">
                 Since <span data-bind="anniversary">12-12-2021</span>
               </p>

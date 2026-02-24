@@ -641,10 +641,28 @@ button:focus-visible,
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--card);
-  padding: clamp(1.2rem, 3vw, 2rem);
+  padding: 0;
   box-shadow: var(--shadow);
   overflow: hidden;
   contain: paint;
+}
+
+.letter-seal-panel {
+  max-height: 520px;
+  min-height: clamp(220px, 34vw, 300px);
+  padding: clamp(1.2rem, 3vw, 2rem);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background:
+    radial-gradient(620px 240px at 50% -24%, rgba(232, 180, 187, 0.2), transparent 64%),
+    radial-gradient(560px 220px at 50% 120%, rgba(222, 192, 139, 0.18), transparent 62%),
+    linear-gradient(158deg, rgba(245, 239, 231, 0.07), rgba(245, 239, 231, 0.02));
+  transition:
+    max-height 420ms cubic-bezier(0.2, 0.7, 0.12, 1),
+    opacity 280ms ease,
+    transform 280ms ease,
+    padding 280ms ease;
 }
 
 .letter-kicker {
@@ -656,32 +674,60 @@ button:focus-visible,
 }
 
 .letter-preview {
-  margin: 0.58rem 0 0;
+  margin: 0.55rem 0 1.15rem;
   color: var(--muted);
+  max-width: 34ch;
 }
 
-.letter-trigger {
-  margin-top: 0.9rem;
-  border: 1px solid rgba(245, 239, 231, 0.26);
+.letter-seal-button {
+  width: 128px;
+  height: 128px;
   border-radius: 999px;
-  padding: 0.56rem 0.92rem;
-  background: rgba(255, 255, 255, 0.03);
-  color: #efe5d6;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  border: 1px solid rgba(222, 192, 139, 0.55);
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.34), transparent 38%),
+    linear-gradient(150deg, #7e3a3a, #b35d5d 58%, #753434);
+  color: #fff7ef;
+  box-shadow:
+    inset 0 0 0 6px rgba(38, 10, 10, 0.26),
+    0 14px 30px rgba(15, 8, 8, 0.42);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
   cursor: pointer;
   transition:
-    border-color 200ms ease,
-    color 200ms ease,
-    transform 200ms ease;
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    filter 200ms ease;
 }
 
-.letter-trigger:hover,
-.letter-trigger:focus-visible {
-  color: #fff7ea;
-  border-color: rgba(232, 180, 187, 0.72);
-  transform: translateY(-1px);
+.letter-seal-button:hover,
+.letter-seal-button:focus-visible {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    inset 0 0 0 6px rgba(38, 10, 10, 0.26),
+    0 18px 36px rgba(15, 8, 8, 0.5);
+  filter: saturate(1.06);
+}
+
+.letter-seal-button:disabled {
+  opacity: 0.62;
+  cursor: default;
+  transform: none;
+  filter: none;
+}
+
+.letter-seal-core {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.letter-seal-text {
+  font-size: 0.67rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .letter-body {
@@ -689,23 +735,64 @@ button:focus-visible,
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transform: translateY(-8px);
+  padding: 0 clamp(1.2rem, 3vw, 2rem);
+  transform: translateY(-10px);
   transition:
     max-height 640ms cubic-bezier(0.2, 0.7, 0.12, 1),
     opacity 340ms ease,
     transform 340ms ease,
-    margin-top 340ms ease;
+    padding 340ms ease;
+}
+
+.letter-body-head {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.55rem;
+}
+
+.letter-reseal {
+  border: 1px solid rgba(245, 239, 231, 0.24);
+  border-radius: 999px;
+  padding: 0.44rem 0.78rem;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease,
+    transform 200ms ease;
+}
+
+.letter-reseal:hover,
+.letter-reseal:focus-visible {
+  color: #fff3df;
+  border-color: rgba(232, 180, 187, 0.72);
+  transform: translateY(-1px);
+}
+
+.letter-reseal:disabled {
+  opacity: 0.58;
+  cursor: default;
+  transform: none;
 }
 
 .letter.is-open .letter-body {
-  margin-top: 0.72rem;
-  max-height: 1000px;
+  max-height: 1200px;
   opacity: 1;
+  padding: clamp(1rem, 3vw, 2rem);
   transform: translateY(0);
 }
 
-.letter.is-open .letter-trigger {
-  display: none;
+.letter.is-open .letter-seal-panel {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-12px);
+  padding-top: 0;
+  padding-bottom: 0;
+  pointer-events: none;
 }
 
 .letter-date {
@@ -1513,8 +1600,10 @@ body.intro-unlocked .site-shell .reveal {
     transition: none;
   }
 
-  .letter-trigger,
-  .letter-body {
+  .letter-seal-panel,
+  .letter-seal-button,
+  .letter-body,
+  .letter-reseal {
     transition: none;
   }
 
