@@ -492,39 +492,6 @@ function setupSongControls() {
     return true;
   };
 
-  const ensureAudioReady = () =>
-    new Promise((resolve, reject) => {
-      if (!audio) {
-        resolve();
-        return;
-      }
-      if (audio.readyState >= 2) {
-        resolve();
-        return;
-      }
-
-      let settled = false;
-      const done = (fn) => {
-        if (settled) return;
-        settled = true;
-        audio.removeEventListener("canplay", onCanPlay);
-        audio.removeEventListener("error", onError);
-        window.clearTimeout(timer);
-        fn();
-      };
-      const onCanPlay = () => done(resolve);
-      const onError = () => done(() => reject(new Error("audio_load_error")));
-      const timer = window.setTimeout(() => done(resolve), 1800);
-
-      audio.addEventListener("canplay", onCanPlay, { once: true });
-      audio.addEventListener("error", onError, { once: true });
-      try {
-        audio.load();
-      } catch {
-        done(resolve);
-      }
-    });
-
   const isUnsupportedError = (error) => {
     const name = String(error?.name || "");
     return name === "NotSupportedError" || name === "AbortError";
@@ -545,7 +512,6 @@ function setupSongControls() {
     }
 
     try {
-      await ensureAudioReady();
       await audio.play();
       setStatus("now playing");
       updatePlayButton();
@@ -596,11 +562,27 @@ function setupSongControls() {
       setStatus("local audio unavailable, use song link");
     });
 
-    const canPlayM4A = audio.canPlayType("audio/mp4; codecs=mp4a.40.2");
-    if (!canPlayM4A) {
-      markLocalPlaybackUnavailable();
-      setStatus("device does not support local format");
-    }
+    const primeAudio = () => {
+      if (localPlaybackUnavailable) return;
+      audio.muted = true;
+      const unlockAttempt = audio.play();
+      if (!unlockAttempt || typeof unlockAttempt.then !== "function") {
+        audio.muted = false;
+        return;
+      }
+      unlockAttempt
+        .then(() => {
+          audio.pause();
+          audio.currentTime = 0;
+          audio.muted = false;
+        })
+        .catch(() => {
+          audio.muted = false;
+        });
+    };
+
+    document.addEventListener("pointerdown", primeAudio, { once: true, passive: true });
+    document.addEventListener("touchstart", primeAudio, { once: true, passive: true });
   }
 
   if (playButton) {
