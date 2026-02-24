@@ -154,7 +154,7 @@ function placeholderPhoto(slot) {
 </linearGradient>
 </defs>
 <rect width='100%' height='100%' fill='url(#g)'/>
-<text x='50%' y='50%' fill='#e8b4bb' font-family='sans-serif' font-size='28' text-anchor='middle'>Add assets/images/photo-${slot}.jpg</text>
+<text x='50%' y='50%' fill='#e8b4bb' font-family='sans-serif' font-size='28' text-anchor='middle'>Missing image for slot ${slot}</text>
 </svg>`;
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
