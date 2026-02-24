@@ -34,6 +34,7 @@ body {
 
 html {
   scroll-padding-top: calc(var(--header-offset) + 10px);
+  -webkit-text-size-adjust: 100%;
 }
 
 img {
@@ -49,8 +50,9 @@ body {
     radial-gradient(900px 500px at 8% 10%, rgba(222, 192, 139, 0.14), transparent 58%),
     linear-gradient(170deg, var(--bg-0), var(--bg-1) 42%, var(--bg-2));
   min-height: 100svh;
+  min-height: 100dvh;
   line-height: 1.6;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.006em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -88,6 +90,7 @@ body.lightbox-open {
   position: relative;
   opacity: 0;
   pointer-events: none;
+  overflow-x: clip;
   transform: translateY(18px);
   transition:
     opacity 440ms ease,
@@ -331,7 +334,7 @@ h3 {
 
 h1 {
   font-size: clamp(2.2rem, 4.8vw, 4rem);
-  line-height: 1.02;
+  line-height: 1.06;
   color: #fff8ef;
   text-wrap: balance;
 }
@@ -340,7 +343,7 @@ h1 {
   margin: 1.1rem 0 0;
   max-width: 54ch;
   color: var(--muted);
-  line-height: 1.82;
+  line-height: 1.74;
   font-size: 1.02rem;
 }
 
@@ -937,8 +940,9 @@ body.intro-unlocked .site-shell .reveal {
   }
 
   .header-inner {
-    flex-wrap: wrap;
-    padding-bottom: 0.45rem;
+    flex-wrap: nowrap;
+    min-height: 68px;
+    padding-bottom: 0;
   }
 
   .moments-timeline::before {
@@ -974,8 +978,22 @@ body.intro-unlocked .site-shell .reveal {
 }
 
 @media (max-width: 620px) {
+  body {
+    line-height: 1.56;
+    letter-spacing: normal;
+  }
+
   .nav-links {
     display: none;
+  }
+
+  .header-inner {
+    min-height: 62px;
+  }
+
+  .brand {
+    font-size: clamp(1.06rem, 5vw, 1.28rem);
+    letter-spacing: 0.05em;
   }
 
   .site-footer {
@@ -999,7 +1017,77 @@ body.intro-unlocked .site-shell .reveal {
   }
 
   .container {
-    width: min(1120px, calc(100% - 1.25rem));
+    width: min(1120px, calc(100% - 1.4rem));
+  }
+
+  .hero {
+    padding-top: 2.85rem;
+    gap: 1.3rem;
+  }
+
+  .kicker {
+    letter-spacing: 0.14em;
+  }
+
+  h1 {
+    line-height: 1.08;
+  }
+
+  .lead {
+    margin-top: 0.95rem;
+    max-width: 34ch;
+    line-height: 1.66;
+    font-size: 0.98rem;
+  }
+
+  .message-line {
+    margin-top: 0.72rem;
+  }
+
+  .hero-actions {
+    margin-top: 1.35rem;
+  }
+
+  .song-meta {
+    gap: 0.6rem;
+  }
+
+  .section-head {
+    margin: 3.1rem 0 0.9rem;
+  }
+
+  .signature-card {
+    order: 0;
+    padding: 1.35rem 1.05rem 1.05rem;
+  }
+
+  .seal {
+    width: 50px;
+    height: 50px;
+    top: 0.85rem;
+    right: 0.85rem;
+  }
+
+  .timeline-item,
+  .timeline-item:nth-child(odd),
+  .timeline-item:nth-child(even) {
+    width: calc(100% - 1.55rem);
+    margin-left: 1.55rem;
+  }
+
+  .timeline-item {
+    padding: 0.95rem 0.95rem;
+  }
+
+  .timeline-item:nth-child(odd)::before,
+  .timeline-item:nth-child(even)::before {
+    left: -1.2rem;
+  }
+
+  .promise-list p {
+    padding: 0.9rem 0.9rem;
+    gap: 0.72rem;
+    line-height: 1.62;
   }
 
   .footer-actions {
@@ -1023,6 +1111,8 @@ body.intro-unlocked .site-shell .reveal {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     box-shadow: 0 14px 26px rgba(0, 0, 0, 0.34);
+    transform: translateZ(0);
+    contain: paint;
   }
 
   .mobile-nav a {
@@ -1095,7 +1185,7 @@ body.intro-unlocked .site-shell .reveal {
 
 @media (max-width: 420px) {
   .hero {
-    padding-top: 3.25rem;
+    padding-top: 2.55rem;
   }
 
   .intro-title {
@@ -1103,7 +1193,7 @@ body.intro-unlocked .site-shell .reveal {
   }
 
   h1 {
-    font-size: clamp(1.95rem, 10.5vw, 2.6rem);
+    font-size: clamp(1.88rem, 10vw, 2.45rem);
   }
 
   .mobile-nav {
