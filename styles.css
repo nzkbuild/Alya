@@ -268,6 +268,27 @@ main {
   -webkit-backdrop-filter: blur(var(--header-blur));
 }
 
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 95;
+  height: 3px;
+  pointer-events: none;
+  background: rgba(245, 239, 231, 0.08);
+}
+
+.scroll-progress-bar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, rgba(222, 192, 139, 0.95), rgba(232, 180, 187, 0.94));
+  transition: transform 120ms linear;
+}
+
 .header-inner {
   display: flex;
   align-items: center;
@@ -869,6 +890,42 @@ h3 {
   display: none;
 }
 
+.back-to-top {
+  position: fixed;
+  right: calc(1rem + var(--safe-right));
+  bottom: calc(var(--mobile-nav-offset) + 1rem + var(--safe-bottom));
+  z-index: 82;
+  min-width: 48px;
+  min-height: 40px;
+  padding: 0.42rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 239, 231, 0.3);
+  background: rgba(16, 12, 12, 0.88);
+  color: var(--text);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease,
+    border-color 200ms ease;
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.back-to-top:hover,
+.back-to-top:focus-visible {
+  border-color: rgba(232, 180, 187, 0.72);
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(14px);
@@ -1125,6 +1182,14 @@ body.intro-unlocked .site-shell .reveal {
     contain: paint;
   }
 
+  .back-to-top {
+    right: calc(0.75rem + var(--safe-right));
+    bottom: calc(var(--mobile-nav-offset) + 0.72rem + var(--safe-bottom));
+    min-width: 46px;
+    min-height: 38px;
+    font-size: 0.68rem;
+  }
+
   .mobile-nav a {
     display: inline-flex;
     justify-content: center;
@@ -1251,6 +1316,8 @@ body.intro-unlocked .site-shell .reveal {
 
   .footer-link,
   .song-link,
+  .back-to-top,
+  .scroll-progress-bar,
   .mobile-nav a,
   .lightbox-close,
   .lightbox-nav {

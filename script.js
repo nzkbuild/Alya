@@ -235,6 +235,35 @@ function setupGalleryLightbox() {
     renderLightbox();
   };
 
+  let touchStartX = 0;
+  let touchStartY = 0;
+  if (lightboxImage) {
+    lightboxImage.addEventListener(
+      "touchstart",
+      (event) => {
+        const touch = event.changedTouches[0];
+        if (!touch) return;
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+      },
+      { passive: true }
+    );
+
+    lightboxImage.addEventListener(
+      "touchend",
+      (event) => {
+        if (!lightbox.classList.contains("is-open")) return;
+        const touch = event.changedTouches[0];
+        if (!touch) return;
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+        if (Math.abs(deltaX) < 46 || Math.abs(deltaY) > 88) return;
+        move(deltaX < 0 ? 1 : -1);
+      },
+      { passive: true }
+    );
+  }
+
   galleryItems.forEach((item, index) => {
     item.card.tabIndex = 0;
     item.card.setAttribute("role", "button");
@@ -443,6 +472,63 @@ function setupTopOnReload() {
   window.requestAnimationFrame(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   });
+}
+
+function setupScrollProgress() {
+  const progressBar = document.getElementById("scrollProgressBar");
+  if (!progressBar) return;
+
+  const doc = document.documentElement;
+  let ticking = false;
+
+  const updateProgress = () => {
+    ticking = false;
+    const scrollTop = window.scrollY || doc.scrollTop || 0;
+    const scrollRange = Math.max(1, doc.scrollHeight - window.innerHeight);
+    const progress = Math.min(1, Math.max(0, scrollTop / scrollRange));
+    progressBar.style.transform = `scaleX(${progress.toFixed(4)})`;
+  };
+
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(updateProgress);
+  };
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  updateProgress();
+}
+
+function setupBackToTop() {
+  const button = document.getElementById("backToTop");
+  if (!button) return;
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const behavior = prefersReducedMotion ? "auto" : "smooth";
+  let ticking = false;
+
+  const toggleVisibility = () => {
+    ticking = false;
+    const threshold = Math.max(360, Math.round(window.innerHeight * 0.72));
+    const shouldShow = window.scrollY > threshold;
+    button.classList.toggle("is-visible", shouldShow);
+    button.setAttribute("aria-hidden", shouldShow ? "false" : "true");
+  };
+
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(toggleVisibility);
+  };
+
+  button.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior });
+  });
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  toggleVisibility();
 }
 
 function setupSongControls() {
@@ -756,11 +842,13 @@ function setupIntroGate(songControls) {
 bindProfileFields();
 setupTopOnReload();
 setupResponsiveOffsets();
+setupScrollProgress();
 setupDailyDetails();
 setupTimelineDates();
 setupTimelineEntrance();
 setupPhotoFallbacks();
 setupGalleryLightbox();
 setupSectionNavHighlight();
+setupBackToTop();
 const songControls = setupSongControls();
 setupIntroGate(songControls);
