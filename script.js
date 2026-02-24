@@ -31,6 +31,48 @@ function parseAnniversary(rawValue) {
   return Number.isNaN(isoDate.getTime()) ? null : isoDate;
 }
 
+function atMidnight(dateValue) {
+  return new Date(dateValue.getFullYear(), dateValue.getMonth(), dateValue.getDate());
+}
+
+function getTogetherDayCount(startDate, endDate = new Date()) {
+  if (!startDate) return 0;
+
+  const start = atMidnight(startDate);
+  const end = atMidnight(endDate);
+  const diff = end.getTime() - start.getTime();
+  return Math.max(0, Math.floor(diff / 86400000));
+}
+
+function getCalendarDifference(startDate, endDate = new Date()) {
+  if (!startDate) return { years: 0, months: 0, days: 0 };
+
+  const start = atMidnight(startDate);
+  const end = atMidnight(endDate);
+  if (end.getTime() < start.getTime()) return { years: 0, months: 0, days: 0 };
+
+  let years = end.getFullYear() - start.getFullYear();
+  let months = end.getMonth() - start.getMonth();
+  let days = end.getDate() - start.getDate();
+
+  if (days < 0) {
+    const daysInPreviousMonth = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+    days += daysInPreviousMonth;
+    months -= 1;
+  }
+
+  if (months < 0) {
+    months += 12;
+    years -= 1;
+  }
+
+  return {
+    years: Math.max(0, years),
+    months: Math.max(0, months),
+    days: Math.max(0, days)
+  };
+}
+
 function bindProfileFields() {
   document.querySelectorAll("[data-bind]").forEach((field) => {
     const key = field.getAttribute("data-bind");
@@ -64,17 +106,82 @@ function setupDailyDetails() {
   }
 
   if (dayCounterEl && anniversaryDate) {
-    const today = new Date();
-    const midnightToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const midnightStart = new Date(
-      anniversaryDate.getFullYear(),
-      anniversaryDate.getMonth(),
-      anniversaryDate.getDate()
-    );
-    const diff = midnightToday.getTime() - midnightStart.getTime();
-    const days = Math.max(0, Math.floor(diff / 86400000));
+    const days = getTogetherDayCount(anniversaryDate);
     dayCounterEl.textContent = `${days.toLocaleString()} days`;
   }
+}
+
+function setupTogetherSpotlight() {
+  const spotlight = document.querySelector(".together-spotlight");
+  const daysValue = document.getElementById("togetherDaysValue");
+  if (!spotlight || !daysValue) return;
+
+  const yearsValue = document.getElementById("togetherYears");
+  const monthsValue = document.getElementById("togetherMonths");
+  const extraDaysValue = document.getElementById("togetherExtraDays");
+  const anniversaryDate = parseAnniversary(profile.anniversary);
+  if (!anniversaryDate) return;
+
+  const totalDays = getTogetherDayCount(anniversaryDate);
+  const duration = getCalendarDifference(anniversaryDate);
+
+  if (yearsValue) yearsValue.textContent = duration.years.toLocaleString();
+  if (monthsValue) monthsValue.textContent = duration.months.toLocaleString();
+  if (extraDaysValue) extraDaysValue.textContent = duration.days.toLocaleString();
+
+  const renderDays = (value) => {
+    const safeValue = Math.max(0, Math.round(value));
+    daysValue.textContent = safeValue.toLocaleString();
+  };
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReducedMotion) {
+    renderDays(totalDays);
+    spotlight.classList.add("is-live");
+    return;
+  }
+
+  let started = false;
+  const startCounter = () => {
+    if (started) return;
+    started = true;
+
+    const durationMs = 1700;
+    const startTime = performance.now();
+    const easing = (t) => 1 - Math.pow(1 - t, 3);
+
+    const tick = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(1, elapsed / durationMs);
+      renderDays(totalDays * easing(progress));
+
+      if (progress < 1) {
+        window.requestAnimationFrame(tick);
+      } else {
+        spotlight.classList.add("is-live");
+      }
+    };
+
+    window.requestAnimationFrame(tick);
+  };
+
+  if (!("IntersectionObserver" in window)) {
+    startCounter();
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        startCounter();
+        observer.disconnect();
+      });
+    },
+    { root: null, threshold: 0.4, rootMargin: "0px 0px -10% 0px" }
+  );
+
+  observer.observe(spotlight);
 }
 
 function setupTimelineDates() {
@@ -90,12 +197,21 @@ function setupTimelineDates() {
     });
 
   timelineDates.forEach((node) => {
-    const explicitType = node.getAttribute("data-timeline-date");
-    if (explicitType === "today") {
-      node.textContent = formatDate(new Date());
+    const explicitDate = node.getAttribute("data-timeline-date");
+    if (explicitDate) {
+      if (explicitDate === "today") {
+        node.textContent = formatDate(new Date());
+        return;
+      }
+
+      const parsedDate = parseAnniversary(explicitDate) || new Date(explicitDate);
+      if (!Number.isNaN(parsedDate.getTime())) {
+        node.textContent = formatDate(parsedDate);
+      }
       return;
     }
 
+    if (!node.hasAttribute("data-timeline-offset-days")) return;
     if (!anniversaryDate) return;
 
     const offsetRaw = node.getAttribute("data-timeline-offset-days");
@@ -844,6 +960,7 @@ setupTopOnReload();
 setupResponsiveOffsets();
 setupScrollProgress();
 setupDailyDetails();
+setupTogetherSpotlight();
 setupTimelineDates();
 setupTimelineEntrance();
 setupPhotoFallbacks();
