@@ -450,42 +450,123 @@ function setupSongControls() {
   const replayButton = document.getElementById("replaySong");
   const statusEl = document.getElementById("songStatus");
   const audio = document.getElementById("ourSong");
+  let localPlaybackUnavailable = false;
+
+  if (audio) {
+    audio.setAttribute("playsinline", "");
+    audio.setAttribute("webkit-playsinline", "true");
+    audio.preload = "metadata";
+  }
 
   const setStatus = (text) => {
     if (statusEl) statusEl.textContent = `Song status: ${text}`;
   };
 
+  const updateReplayButton = () => {
+    if (!replayButton) return;
+    replayButton.textContent = localPlaybackUnavailable ? "Open Song Link" : "Replay from start";
+  };
+
   const updatePlayButton = () => {
     if (!playButton) return;
+    if (localPlaybackUnavailable) {
+      playButton.textContent = "Open Song Link";
+      return;
+    }
     playButton.textContent = audio && !audio.paused ? "Pause Our Song" : "Play Our Song";
   };
 
+  const markLocalPlaybackUnavailable = () => {
+    localPlaybackUnavailable = true;
+    updatePlayButton();
+    updateReplayButton();
+  };
+
   const openFallbackUrl = () => {
-    if (!profile.songUrl.trim()) return;
-    window.open(profile.songUrl, "_blank", "noopener,noreferrer");
+    const url = profile.songUrl.trim();
+    if (!url) return false;
+    const popup = window.open(url, "_blank", "noopener,noreferrer");
+    if (!popup) {
+      window.location.href = url;
+    }
+    return true;
+  };
+
+  const ensureAudioReady = () =>
+    new Promise((resolve, reject) => {
+      if (!audio) {
+        resolve();
+        return;
+      }
+      if (audio.readyState >= 2) {
+        resolve();
+        return;
+      }
+
+      let settled = false;
+      const done = (fn) => {
+        if (settled) return;
+        settled = true;
+        audio.removeEventListener("canplay", onCanPlay);
+        audio.removeEventListener("error", onError);
+        window.clearTimeout(timer);
+        fn();
+      };
+      const onCanPlay = () => done(resolve);
+      const onError = () => done(() => reject(new Error("audio_load_error")));
+      const timer = window.setTimeout(() => done(resolve), 1800);
+
+      audio.addEventListener("canplay", onCanPlay, { once: true });
+      audio.addEventListener("error", onError, { once: true });
+      try {
+        audio.load();
+      } catch {
+        done(resolve);
+      }
+    });
+
+  const isUnsupportedError = (error) => {
+    const name = String(error?.name || "");
+    return name === "NotSupportedError" || name === "AbortError";
   };
 
   const playLocalSong = async ({ fromStart = false, allowFallback = true } = {}) => {
-    if (!audio) {
-      if (allowFallback) openFallbackUrl();
-      setStatus("fallback link opened");
+    if (!audio || localPlaybackUnavailable) {
+      if (allowFallback && openFallbackUrl()) {
+        setStatus("fallback link opened");
+      } else {
+        setStatus("song link unavailable");
+      }
       return false;
     }
 
-    if (fromStart) audio.currentTime = 0;
+    if (fromStart) {
+      audio.currentTime = 0;
+    }
+
     try {
+      await ensureAudioReady();
       await audio.play();
       setStatus("now playing");
       updatePlayButton();
+      updateReplayButton();
       return true;
-    } catch {
+    } catch (error) {
+      if (audio.error || isUnsupportedError(error)) {
+        markLocalPlaybackUnavailable();
+      }
+
       if (allowFallback) {
-        openFallbackUrl();
-        setStatus("audio blocked, opened fallback");
+        if (openFallbackUrl()) {
+          setStatus("local audio unavailable, opened song link");
+        } else {
+          setStatus("local audio unavailable");
+        }
       } else {
         setStatus("tap play once to enable audio");
       }
       updatePlayButton();
+      updateReplayButton();
       return false;
     }
   };
@@ -510,10 +591,24 @@ function setupSongControls() {
       setStatus("ended");
       updatePlayButton();
     });
+    audio.addEventListener("error", () => {
+      markLocalPlaybackUnavailable();
+      setStatus("local audio unavailable, use song link");
+    });
+
+    const canPlayM4A = audio.canPlayType("audio/mp4; codecs=mp4a.40.2");
+    if (!canPlayM4A) {
+      markLocalPlaybackUnavailable();
+      setStatus("device does not support local format");
+    }
   }
 
   if (playButton) {
     playButton.addEventListener("click", async () => {
+      if (localPlaybackUnavailable) {
+        if (openFallbackUrl()) setStatus("opened song link");
+        return;
+      }
       if (audio && !audio.paused) {
         pauseSong();
         return;
@@ -524,12 +619,17 @@ function setupSongControls() {
 
   if (replayButton) {
     replayButton.addEventListener("click", async () => {
+      if (localPlaybackUnavailable) {
+        if (openFallbackUrl()) setStatus("opened song link");
+        return;
+      }
       await playLocalSong({ fromStart: true, allowFallback: true });
     });
   }
 
   setStatus("paused");
   updatePlayButton();
+  updateReplayButton();
   return { playLocalSong, pauseSong };
 }
 
