@@ -16,6 +16,8 @@
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
+  --header-offset: 78px;
+  --mobile-nav-offset: 0px;
 }
 
 *,
@@ -28,6 +30,10 @@ html,
 body {
   margin: 0;
   padding: 0;
+}
+
+html {
+  scroll-padding-top: calc(var(--header-offset) + 10px);
 }
 
 img {
@@ -226,7 +232,7 @@ body.intro-unlocked .intro-gate {
 }
 
 .container {
-  width: min(1100px, calc(100% - 2.4rem));
+  width: min(1120px, calc(100% - clamp(1.5rem, 3vw, 2.6rem)));
   margin: 0 auto;
 }
 
@@ -234,11 +240,15 @@ body.intro-unlocked .intro-gate {
 #moments,
 #gallery,
 #promises {
-  scroll-margin-top: calc(78px + var(--safe-top));
+  scroll-margin-top: calc(var(--header-offset) + 10px);
 }
 
 #promises {
   padding-bottom: 1.2rem;
+}
+
+main {
+  padding-bottom: 0.35rem;
 }
 
 .site-header {
@@ -902,6 +912,16 @@ body.intro-unlocked .site-shell .reveal {
   }
 }
 
+@media (min-width: 1400px) {
+  .container {
+    width: min(1240px, calc(100% - 4.4rem));
+  }
+
+  .hero {
+    gap: 2.5rem;
+  }
+}
+
 @media (max-width: 900px) {
   body {
     --shadow: 0 10px 20px rgba(0, 0, 0, 0.28);
@@ -959,7 +979,11 @@ body.intro-unlocked .site-shell .reveal {
   }
 
   .site-footer {
-    padding-bottom: calc(5.4rem + var(--safe-bottom));
+    padding-bottom: calc(var(--mobile-nav-offset) + 1.4rem + var(--safe-bottom));
+  }
+
+  main {
+    padding-bottom: calc(var(--mobile-nav-offset) + 0.75rem);
   }
 
   .intro-panel {
@@ -975,7 +999,7 @@ body.intro-unlocked .site-shell .reveal {
   }
 
   .container {
-    width: min(1100px, calc(100% - 1.5rem));
+    width: min(1120px, calc(100% - 1.25rem));
   }
 
   .footer-actions {
@@ -1066,6 +1090,35 @@ body.intro-unlocked .site-shell .reveal {
   .lightbox-close {
     top: calc(0.55rem + var(--safe-top));
     right: calc(0.55rem + var(--safe-right));
+  }
+}
+
+@media (max-width: 420px) {
+  .hero {
+    padding-top: 3.25rem;
+  }
+
+  .intro-title {
+    font-size: clamp(1.7rem, 9vw, 2.3rem);
+  }
+
+  h1 {
+    font-size: clamp(1.95rem, 10.5vw, 2.6rem);
+  }
+
+  .mobile-nav {
+    gap: 0.33rem;
+    padding: 0.34rem;
+  }
+
+  .mobile-nav a {
+    min-height: 36px;
+    font-size: 0.68rem;
+    letter-spacing: 0.03em;
+  }
+
+  .promise-list p {
+    align-items: flex-start;
   }
 }
 

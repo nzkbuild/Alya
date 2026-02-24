@@ -299,6 +299,41 @@ function setupGalleryLightbox() {
   });
 }
 
+function setupResponsiveOffsets() {
+  const root = document.documentElement;
+  const header = document.querySelector(".site-header");
+  const mobileNav = document.querySelector(".mobile-nav");
+  if (!header && !mobileNav) return;
+
+  let rafId = 0;
+
+  const syncOffsets = () => {
+    rafId = 0;
+    const headerHeight = header ? Math.ceil(header.getBoundingClientRect().height) : 0;
+    const mobileNavStyles = mobileNav ? window.getComputedStyle(mobileNav) : null;
+    const mobileNavVisible = mobileNav && mobileNavStyles && mobileNavStyles.display !== "none";
+    const mobileNavHeight = mobileNavVisible ? Math.ceil(mobileNav.getBoundingClientRect().height) : 0;
+
+    root.style.setProperty("--header-offset", `${Math.max(74, headerHeight)}px`);
+    root.style.setProperty("--mobile-nav-offset", `${mobileNavHeight}px`);
+  };
+
+  const queueSync = () => {
+    if (rafId) return;
+    rafId = window.requestAnimationFrame(syncOffsets);
+  };
+
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(queueSync);
+    if (header) observer.observe(header);
+    if (mobileNav) observer.observe(mobileNav);
+  }
+
+  window.addEventListener("resize", queueSync, { passive: true });
+  window.addEventListener("orientationchange", queueSync, { passive: true });
+  queueSync();
+}
+
 function setupSectionNavHighlight() {
   const sections = Array.from(document.querySelectorAll("main section[id]"));
   if (!sections.length) return;
@@ -309,6 +344,7 @@ function setupSectionNavHighlight() {
   if (!navLinks.length) return;
 
   let activeId = "";
+  const doc = document.documentElement;
 
   const setActive = (id) => {
     if (!id || activeId === id) return;
@@ -326,68 +362,35 @@ function setupSectionNavHighlight() {
     });
   };
 
+  const getHeaderOffset = () => {
+    const value = window.getComputedStyle(doc).getPropertyValue("--header-offset");
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : 84;
+  };
+
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const scrollBehavior = prefersReducedMotion ? "auto" : "smooth";
   let ticking = false;
-  let lastScrollY = window.scrollY;
 
   const pickActiveByScroll = () => {
-    const doc = document.documentElement;
-    const lastSection = sections[sections.length - 1];
-    const lastTop = lastSection.getBoundingClientRect().top;
-    const lastActivationLine =
-      window.innerHeight - Math.max(96, Math.round(window.innerHeight * 0.24));
-
-    if (lastTop <= lastActivationLine) {
-      setActive(lastSection.id);
-      return;
-    }
-
+    const scrollTop = window.scrollY || window.pageYOffset || 0;
+    const viewportBottom = scrollTop + window.innerHeight;
     const docHeight = Math.max(document.body.scrollHeight, doc.scrollHeight);
-    const nearBottomThreshold = Math.max(24, Math.round(window.innerHeight * 0.08));
-    const nearBottom = window.scrollY + window.innerHeight >= docHeight - nearBottomThreshold;
+    const lastSection = sections[sections.length - 1];
+    const nearBottom = viewportBottom >= docHeight - 2;
     if (nearBottom) {
       setActive(lastSection.id);
       return;
     }
 
-    const marker = Math.max(110, Math.min(window.innerHeight * 0.34, 260));
-    const hysteresis = 24;
-    const sectionTops = sections.map((section) => section.getBoundingClientRect().top);
-    const scrollingDown = window.scrollY >= lastScrollY;
-    lastScrollY = window.scrollY;
-
-    let candidateIndex = 0;
-    sectionTops.forEach((top, index) => {
-      if (top <= marker) candidateIndex = index;
-    });
-
-    if (!activeId) {
-      setActive(sections[candidateIndex].id);
-      return;
-    }
-
-    let activeIndex = sections.findIndex((section) => section.id === activeId);
-    if (activeIndex < 0) activeIndex = 0;
-
-    if (scrollingDown) {
-      while (
-        activeIndex + 1 < sections.length &&
-        sectionTops[activeIndex + 1] <= marker - hysteresis
-      ) {
-        activeIndex += 1;
-      }
-    } else {
-      while (activeIndex > 0 && sectionTops[activeIndex] > marker + hysteresis) {
-        activeIndex -= 1;
+    const marker = scrollTop + getHeaderOffset() + 18;
+    let candidateId = sections[0].id;
+    for (let i = 0; i < sections.length; i += 1) {
+      if (sections[i].offsetTop <= marker) {
+        candidateId = sections[i].id;
       }
     }
-
-    if (Math.abs(candidateIndex - activeIndex) > 1) {
-      activeIndex = candidateIndex;
-    }
-
-    setActive(sections[activeIndex].id);
+    setActive(candidateId);
   };
 
   const onScroll = () => {
@@ -411,7 +414,12 @@ function setupSectionNavHighlight() {
 
       event.preventDefault();
       setActive(id);
-      target.scrollIntoView({ behavior: scrollBehavior, block: "start" });
+      const offset = getHeaderOffset() + 8;
+      const targetTop = Math.max(
+        0,
+        target.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0) - offset
+      );
+      window.scrollTo({ top: targetTop, behavior: scrollBehavior });
 
       if (window.history && typeof window.history.replaceState === "function") {
         const cleanUrl = `${window.location.pathname}${window.location.search}`;
@@ -687,6 +695,7 @@ function setupIntroGate(songControls) {
 
 bindProfileFields();
 setupTopOnReload();
+setupResponsiveOffsets();
 setupDailyDetails();
 setupTimelineDates();
 setupTimelineEntrance();
