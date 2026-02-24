@@ -228,6 +228,9 @@ function setupLetterReveal() {
     scrollToLetter();
   };
 
+  // Always start sealed on load; open only via explicit user action.
+  setOpenState(false);
+
   if (openButton) {
     openButton.addEventListener("click", openLetter);
   }
@@ -243,10 +246,6 @@ function setupLetterReveal() {
       }
     });
   });
-
-  if (window.location.hash === "#letter") {
-    setOpenState(true);
-  }
 }
 
 function setupTimelineDates() {
