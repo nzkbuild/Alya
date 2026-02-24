@@ -638,6 +638,9 @@ button:focus-visible,
 
 .letter {
   margin-top: 0;
+  width: min(100%, 760px);
+  margin-left: auto;
+  margin-right: auto;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--card);
@@ -649,8 +652,8 @@ button:focus-visible,
 
 .letter-seal-panel {
   max-height: 520px;
-  min-height: clamp(220px, 34vw, 300px);
-  padding: clamp(1.2rem, 3vw, 2rem);
+  min-height: clamp(148px, 21vw, 210px);
+  padding: clamp(0.9rem, 2.1vw, 1.35rem);
   display: grid;
   place-items: center;
   text-align: center;
@@ -674,14 +677,14 @@ button:focus-visible,
 }
 
 .letter-preview {
-  margin: 0.55rem 0 1.15rem;
+  margin: 0.44rem 0 0.82rem;
   color: var(--muted);
-  max-width: 34ch;
+  max-width: 30ch;
 }
 
 .letter-seal-button {
-  width: 128px;
-  height: 128px;
+  width: clamp(88px, 10vw, 106px);
+  height: clamp(88px, 10vw, 106px);
   border-radius: 999px;
   border: 1px solid rgba(222, 192, 139, 0.55);
   background:
@@ -689,8 +692,8 @@ button:focus-visible,
     linear-gradient(150deg, #7e3a3a, #b35d5d 58%, #753434);
   color: #fff7ef;
   box-shadow:
-    inset 0 0 0 6px rgba(38, 10, 10, 0.26),
-    0 14px 30px rgba(15, 8, 8, 0.42);
+    inset 0 0 0 5px rgba(38, 10, 10, 0.26),
+    0 10px 24px rgba(15, 8, 8, 0.4);
   display: inline-flex;
   flex-direction: column;
   align-items: center;
@@ -707,8 +710,8 @@ button:focus-visible,
 .letter-seal-button:focus-visible {
   transform: translateY(-2px) scale(1.02);
   box-shadow:
-    inset 0 0 0 6px rgba(38, 10, 10, 0.26),
-    0 18px 36px rgba(15, 8, 8, 0.5);
+    inset 0 0 0 5px rgba(38, 10, 10, 0.26),
+    0 14px 28px rgba(15, 8, 8, 0.48);
   filter: saturate(1.06);
 }
 
@@ -720,12 +723,12 @@ button:focus-visible,
 }
 
 .letter-seal-core {
-  font-size: 1.35rem;
+  font-size: 1.05rem;
   line-height: 1;
 }
 
 .letter-seal-text {
-  font-size: 0.67rem;
+  font-size: 0.56rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -735,7 +738,7 @@ button:focus-visible,
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  padding: 0 clamp(1.2rem, 3vw, 2rem);
+  padding: 0 clamp(0.95rem, 2.2vw, 1.35rem);
   transform: translateY(-10px);
   transition:
     max-height 640ms cubic-bezier(0.2, 0.7, 0.12, 1),
@@ -782,7 +785,7 @@ button:focus-visible,
 .letter.is-open .letter-body {
   max-height: 1200px;
   opacity: 1;
-  padding: clamp(1rem, 3vw, 2rem);
+  padding: clamp(0.9rem, 2.4vw, 1.45rem);
   transform: translateY(0);
 }
 
@@ -803,9 +806,9 @@ button:focus-visible,
 }
 
 .letter p {
-  line-height: 1.82;
+  line-height: 1.72;
   color: #efe6d7;
-  max-width: 62ch;
+  max-width: 56ch;
 }
 
 .signature {
@@ -1319,6 +1322,16 @@ body.intro-unlocked .site-shell .reveal {
   .signature-card {
     order: -1;
   }
+
+  .letter-seal-panel {
+    min-height: clamp(138px, 30vw, 176px);
+    padding: 0.9rem 0.95rem;
+  }
+
+  .letter-seal-button {
+    width: 92px;
+    height: 92px;
+  }
 }
 
 @media (max-width: 620px) {
@@ -1406,6 +1419,25 @@ body.intro-unlocked .site-shell .reveal {
 
   .section-head {
     margin: 0 0 0.9rem;
+  }
+
+  .letter-seal-panel {
+    min-height: 126px;
+    padding: 0.82rem 0.9rem;
+  }
+
+  .letter-preview {
+    margin-bottom: 0.7rem;
+    max-width: 26ch;
+  }
+
+  .letter-seal-button {
+    width: 84px;
+    height: 84px;
+  }
+
+  .letter-seal-text {
+    font-size: 0.53rem;
   }
 
   .signature-card {
@@ -1566,6 +1598,16 @@ body.intro-unlocked .site-shell .reveal {
     min-height: 36px;
     font-size: 0.68rem;
     letter-spacing: 0.03em;
+  }
+
+  .letter-seal-panel {
+    min-height: 118px;
+    padding: 0.75rem 0.8rem;
+  }
+
+  .letter-seal-button {
+    width: 78px;
+    height: 78px;
   }
 
   .promise-list p {
