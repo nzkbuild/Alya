@@ -66,8 +66,8 @@
           <div class="brand">Alya x Nabil</div>
           <nav class="nav-links" aria-label="Primary">
             <a href="#letter">Letter</a>
-            <a href="#together">Together</a>
             <a href="#moments">Moments</a>
+            <a href="#together">Together</a>
             <a href="#gallery">Gallery</a>
             <a href="#promises">Promises</a>
           </nav>
@@ -87,9 +87,6 @@
             </p>
             <p class="message-line" id="dailyMessage">
               You are my favorite part of every day.
-            </p>
-            <p class="day-counter">
-              Together for <span id="dayCounter">0 days</span>
             </p>
             <div class="hero-actions">
               <a class="btn btn-gold" href="#letter">Open the Letter</a>
@@ -113,30 +110,6 @@
             <h2 data-bind="herName">Alya Batrisyia</h2>
             <p class="card-sub">Only one edition exists.</p>
           </aside>
-        </section>
-
-        <section id="together" class="container reveal">
-          <div class="section-head">
-            <p class="kicker">Since Day One</p>
-            <h3>The days keep choosing us</h3>
-          </div>
-          <article class="together-spotlight" aria-label="Together day count showcase">
-            <p class="together-label">
-              Started on <span data-bind="anniversary">12-12-2021</span>
-            </p>
-            <p class="together-number">
-              <span class="together-days" id="togetherDaysValue">0</span>
-              <span class="together-unit">days together</span>
-            </p>
-            <div class="together-breakdown" aria-label="Relationship duration breakdown">
-              <p class="together-chip"><span id="togetherYears">0</span> years</p>
-              <p class="together-chip"><span id="togetherMonths">0</span> months</p>
-              <p class="together-chip"><span id="togetherExtraDays">0</span> days</p>
-            </div>
-            <p class="together-note">
-              From the first Instagram message on 12 Dec 2021, this counter keeps the whole story in one line until now.
-            </p>
-          </article>
         </section>
 
         <section id="letter" class="container reveal">
@@ -169,22 +142,22 @@
             <article class="timeline-item">
               <p class="timeline-date" data-timeline-date="12-12-2021">Chapter 01</p>
               <h4 class="timeline-title">First Instagram Message</h4>
-              <p class="timeline-copy">12 Dec 2021. The beginning of everything about me and her.</p>
+              <p class="timeline-copy">The beginning of everything about me and her.</p>
             </article>
             <article class="timeline-item">
               <p class="timeline-date" data-timeline-date="29-12-2021">Chapter 02</p>
               <h4 class="timeline-title">First Meet Up</h4>
-              <p class="timeline-copy">29 Dec 2021. The first time we met in person.</p>
+              <p class="timeline-copy">The first time we met in person.</p>
             </article>
             <article class="timeline-item">
               <p class="timeline-date" data-timeline-date="03-01-2023">Chapter 03</p>
               <h4 class="timeline-title">First Breakup</h4>
-              <p class="timeline-copy">3 Jan 2023. Our first breakup, a hard chapter in our story.</p>
+              <p class="timeline-copy">Our first breakup, a hard chapter in our story.</p>
             </article>
             <article class="timeline-item">
               <p class="timeline-date" data-timeline-date="29-12-2023">Chapter 04</p>
               <h4 class="timeline-title">Reunited Back</h4>
-              <p class="timeline-copy">29 Dec 2023. We reunited and started again, stronger.</p>
+              <p class="timeline-copy">We reunited and started again, stronger.</p>
             </article>
             <article class="timeline-item">
               <p class="timeline-date" data-timeline-date="today">Chapter 05</p>
@@ -192,6 +165,30 @@
               <p class="timeline-copy">Still together, still learning, still choosing each other every day.</p>
             </article>
           </div>
+        </section>
+
+        <section id="together" class="container reveal">
+          <div class="section-head">
+            <p class="kicker">Since Day One</p>
+            <h3>The days keep choosing us</h3>
+          </div>
+          <article class="together-spotlight" aria-label="Together day count showcase">
+            <p class="together-label">
+              Started on <span data-bind="anniversary">12-12-2021</span>
+            </p>
+            <p class="together-number">
+              <span class="together-days" id="togetherDaysValue">0</span>
+              <span class="together-unit">days together</span>
+            </p>
+            <div class="together-breakdown" aria-label="Relationship duration breakdown">
+              <p class="together-chip"><span id="togetherYears">0</span> years</p>
+              <p class="together-chip"><span id="togetherMonths">0</span> months</p>
+              <p class="together-chip"><span id="togetherExtraDays">0</span> days</p>
+            </div>
+            <p class="together-note">
+              From the first Instagram message on <span data-bind="anniversary">12-12-2021</span>, this counter keeps the whole story in one line until now.
+            </p>
+          </article>
         </section>
 
         <section id="gallery" class="container reveal">
@@ -302,8 +299,8 @@
 
       <nav class="mobile-nav" aria-label="Mobile sections">
         <a href="#letter">Letter</a>
-        <a href="#together">Days</a>
         <a href="#moments">Moments</a>
+        <a href="#together">Together</a>
         <a href="#gallery">Gallery</a>
         <a href="#promises">Promises</a>
       </nav>

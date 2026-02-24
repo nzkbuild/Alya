@@ -20,15 +20,15 @@ function parseAnniversary(rawValue) {
   const normalized = String(rawValue || "").trim();
   if (!normalized) return null;
 
-  const fallbackDate = new Date(normalized);
-  if (!Number.isNaN(fallbackDate.getTime())) return fallbackDate;
-
   const dayMonthYear = normalized.match(/^(\d{2})-(\d{2})-(\d{4})$/);
-  if (!dayMonthYear) return null;
+  if (dayMonthYear) {
+    const [, day, month, year] = dayMonthYear;
+    const isoDate = new Date(`${year}-${month}-${day}T00:00:00`);
+    return Number.isNaN(isoDate.getTime()) ? null : isoDate;
+  }
 
-  const [, day, month, year] = dayMonthYear;
-  const isoDate = new Date(`${year}-${month}-${day}T00:00:00`);
-  return Number.isNaN(isoDate.getTime()) ? null : isoDate;
+  const fallbackDate = new Date(normalized);
+  return Number.isNaN(fallbackDate.getTime()) ? null : fallbackDate;
 }
 
 function atMidnight(dateValue) {
@@ -96,18 +96,11 @@ function bindProfileFields() {
 
 function setupDailyDetails() {
   const messageEl = document.getElementById("dailyMessage");
-  const dayCounterEl = document.getElementById("dayCounter");
-  const anniversaryDate = parseAnniversary(profile.anniversary);
 
   if (messageEl) {
     const dayIndex =
       Math.floor(Date.now() / 86400000) % DAILY_MESSAGES.length;
     messageEl.textContent = DAILY_MESSAGES[Math.abs(dayIndex)];
-  }
-
-  if (dayCounterEl && anniversaryDate) {
-    const days = getTogetherDayCount(anniversaryDate);
-    dayCounterEl.textContent = `${days.toLocaleString()} days`;
   }
 }
 
